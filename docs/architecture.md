@@ -19,7 +19,7 @@ flowchart TB
 
         storage[("<b>Almacenamiento del navegador</b><br/><i>[Contenedor: localStorage]</i><br/><br/>Clave flowsync.token:<br/>el access token entre recargas")]
 
-        api["<b>API</b><br/><i>[Contenedor: AdonisJS 7 · :3333]</i><br/><br/>start/routes.ts · middleware force_json / cors / silent_auth / auth<br/>controllers: NewAccount, AccessTokens, Profile,<br/>Tasks, TaskStatuses, TaskDueDates<br/>validators (VineJS 4) · transformers (User, Task,<br/>TaskDetail, TaskAssignee) · api_provider: envuelve todo en { data }<br/>models Lucid 22: User (initials, accessTokens), Task (isOverdueOn)"]
+        api["<b>API</b><br/><i>[Contenedor: AdonisJS 7 · :3333]</i><br/><br/>start/routes.ts · middleware force_json / cors / silent_auth / auth<br/>controllers: NewAccount, AccessTokens, Profile,<br/>Tasks, TaskStatuses, TaskDueDates<br/>validators (VineJS 4) · transformers (User, Task,<br/>TaskDetail, TaskAssignee) · api_provider: envuelve todo en { data }<br/>models Lucid 22: User (initials, accessTokens), Task (isOverdueOn)<br/>@foadonis/openapi: documento generado del router en cada petición"]
 
         db[("<b>Base de datos</b><br/><i>[Contenedor: SQLite · better-sqlite3]</i><br/>backend/tmp/db.sqlite3<br/><br/>users · auth_access_tokens · tasks<br/>Esquema desde database/migrations,<br/>database/schema.ts autogenerado")]
     end
@@ -31,6 +31,8 @@ flowchart TB
     spa -->|"Alta y acceso, sin token<br/>POST /api/v1/auth/signup · POST /api/v1/auth/login<br/>[JSON/HTTP]"| api
     spa -->|"Sesión, con Authorization: Bearer<br/>GET /api/v1/account/profile · POST /api/v1/account/logout<br/>[JSON/HTTP]"| api
     spa -->|"Tareas, con Authorization: Bearer<br/>GET · POST /api/v1/tasks<br/>GET /api/v1/tasks/:id?today=AAAA-MM-DD<br/>PATCH /api/v1/tasks/:id/status<br/>PUT /api/v1/tasks/:id/due-date<br/>[JSON/HTTP]"| api
+
+    person -->|"Consulta la documentación, sin sesión<br/>GET /api (UI Scalar) · GET /api.json · GET /api.yaml<br/>[HTTP]"| api
 
     api -->|"Consulta y escribe<br/>[Lucid ORM / better-sqlite3]"| db
 ```
@@ -52,6 +54,10 @@ flowchart TB
   cuerpo de la fecha de vencimiento): la SPA lo calcula con la hora local del
   navegador y el backend decide con él si una tarea está vencida
   (`Task.isOverdueOn`). No hay reloj de servidor en esa decisión.
+- **La documentación se sirve desde la propia API**, no desde un contenedor
+  aparte: `openapi.registerRoutes()` en `start/routes.ts` registra `/api` (UI),
+  `/api.json` y `/api.yaml`, y el documento se construye leyendo el router en
+  cada petición (solo se cachea en producción). Las tres rutas son públicas.
 - **No hay registro tipado en el camino real**: `backend/.adonisjs/client/registry/`
   (Tuyau) está generado y versionado, pero el frontend no lo consume — solo lo
   usa `backend/tests/bootstrap.ts` para tipar el `apiClient` de Japa.
