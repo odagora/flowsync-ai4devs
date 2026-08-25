@@ -52,9 +52,11 @@ La granularidad es deliberada: requisitos con `SHALL`, scenarios con `WHEN`/`THE
 
 ## Estado
 
-**Aceptada** — 2026-08-25.
+**Reemplazada** por el [ADR 0002 — Los tests de integración son la única fuente de verdad ejecutable](0002-tests-como-fuente-de-verdad-ejecutable.md) — 2027-08-25.
 
-Está en vigor desde los tres changes de 2026-08-13, que son la totalidad de la historia registrada. No hay ningún change en curso: `openspec/changes/` contiene solo `archive/`.
+Aceptada el 2026-08-25 y en vigor hasta el 2027-08-25. Estuvo vigente desde los tres changes de 2026-08-13, que eran la totalidad de la historia registrada; no había ningún change en curso y `openspec/changes/` contenía solo `archive/`.
+
+El contexto y la decisión que siguen escritos arriba no se han tocado: son el registro de lo que se creía y se decidió entonces, y se conservan tal cual. `openspec/` deja de ser fuente de verdad, pero se conserva como registro histórico de solo lectura.
 
 ## Consecuencias
 
