@@ -23,5 +23,21 @@ export default defineConfig({
        */
       version: '1.0.0',
     },
+
+    components: {
+      securitySchemes: {
+        /**
+         * El nombre `bearer` no es decorativo: es el que referencia
+         * `@ApiBearerAuth()` al decorar cada operación. Si se renombra aquí,
+         * las operaciones quedan apuntando a un esquema que no existe.
+         */
+        bearer: {
+          type: 'http',
+          scheme: 'bearer',
+          description:
+            'Token de acceso opaco, el que devuelven `POST /api/v1/auth/signup` y `POST /api/v1/auth/login`. Viaja en `Authorization: Bearer <token>`.',
+        },
+      },
+    },
   },
 })
