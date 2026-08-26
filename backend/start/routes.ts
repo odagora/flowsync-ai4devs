@@ -9,6 +9,7 @@
 
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
+import openapi from '@foadonis/openapi/services/main'
 import { controllers } from '#generated/controllers'
 
 router.get('/', () => {
@@ -47,3 +48,9 @@ router
       .use(middleware.auth())
   })
   .prefix('/api/v1')
+
+/**
+ * Documento OpenAPI e interfaz de la documentación. Va fuera del grupo
+ * `/api/v1`: el documento describe la API, no es una ruta más de ella.
+ */
+openapi.registerRoutes()
