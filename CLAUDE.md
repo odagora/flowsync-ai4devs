@@ -131,4 +131,5 @@ La URL de la API sale de `VITE_API_URL` (ver `frontend/.env.example`); por defec
 - El commit sí es por petición: al cerrar cada una, usar la skill `/commit`.
 - `gh pr create`, con una descripción completa de los cambios en el cuerpo del PR, va una sola vez: al terminar la unidad de trabajo, no al cerrar cada petición.
 - El pase del subagente `adversarial-reviewer` sobre el PR va también una sola vez, después de abrirlo y antes de dar por terminada la unidad de trabajo.
+- El contrato y su README van en el mismo commit que el código: si tocas rutas, controladores, validadores o transformers de una capability, actualiza en esa misma tanda los decoradores de OpenAPI —el documento se sirve de ellos, así que regenerarlo es corregirlos— y `docs/capabilities/<nombre>/README.md`. Dejarlo para después es dejarlo desactualizado.
 - No repitas ese resumen en el chat: la sesión se va a perder, el PR no. Responde solo con la URL del PR.
