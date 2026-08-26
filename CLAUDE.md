@@ -127,7 +127,8 @@ Organización de `src/`:
 La URL de la API sale de `VITE_API_URL` (ver `frontend/.env.example`); por defecto `http://localhost:3333`.
 
 ## Reglas de proceso
-- Antes de tocar código: crear una rama nueva (`git checkout -b feat/<slug>`). Nunca commitear directo en `main`/`s1/start`.
-- Al cerrar la tarea: usar la skill `/commit`, luego `gh pr create` con una descripción completa de los cambios en el cuerpo del PR.
-- Después de abrir el PR: usar el subagente `adversarial-reviewer` sobre él, antes de darlo por terminado.
+- La rama es por unidad de trabajo, no por petición: si ya estás en una rama de trabajo —cualquiera que no sea `main` ni una `s<N>/*` como `s1/start` o `s4/start`—, sigue en ella en vez de crear otra. Solo si estás en `main` o en una `s<N>/*`, crea una rama nueva (`git checkout -b feat/<slug>`) antes de tocar código. Nunca commitear directo en `main` ni en una `s<N>/*`.
+- El commit sí es por petición: al cerrar cada una, usar la skill `/commit`.
+- `gh pr create`, con una descripción completa de los cambios en el cuerpo del PR, va una sola vez: al terminar la unidad de trabajo, no al cerrar cada petición.
+- El pase del subagente `adversarial-reviewer` sobre el PR va también una sola vez, después de abrirlo y antes de dar por terminada la unidad de trabajo.
 - No repitas ese resumen en el chat: la sesión se va a perder, el PR no. Responde solo con la URL del PR.
