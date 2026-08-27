@@ -132,5 +132,6 @@ La rama es por **unidad de trabajo**; el commit, por **petición**. Una unidad d
 
 - Antes de tocar código, mira en qué rama estás. Si ya estás en una rama de trabajo —cualquiera que no sea `main` ni una del curso (`s1/start`, `s4/start`…)—, **sigue en ella**: no abras otra por cada petición. Solo si estás en `main` o en una `sN/*` se crea rama nueva (`git checkout -b feat/<slug>`). Nunca commitear directo en `main` ni en una `sN/*`.
 - Al cerrar cada petición: usar la skill `/commit`. Un commit por petición, dentro de la rama de la unidad de trabajo.
+- Si el cambio toca rutas, controladores, validadores o transformers de una capability, en el **mismo commit** van la regeneración del documento OpenAPI y el README de esa capability (`docs/capabilities/<nombre>/README.md`). Dejarlo para después es dejarlo sin hacer.
 - Al terminar la **unidad de trabajo entera** —no cada petición—, y una sola vez: `gh pr create` con una descripción completa de los cambios en el cuerpo del PR, y después el subagente `adversarial-reviewer` sobre ese PR, antes de darlo por terminado. Si el PR ya está abierto, los commits siguientes de esa unidad entran solos: no se abre otro ni se repite el pase del subagente.
 - No repitas ese resumen en el chat: la sesión se va a perder, el PR no. Responde solo con la URL del PR.
