@@ -127,7 +127,11 @@ Organización de `src/`:
 La URL de la API sale de `VITE_API_URL` (ver `frontend/.env.example`); por defecto `http://localhost:3333`.
 
 ## Reglas de proceso
-- Antes de tocar código: crear una rama nueva (`git checkout -b feat/<slug>`). Nunca commitear directo en `main`/`s1/start`.
-- Al cerrar la tarea: usar la skill `/commit`, luego `gh pr create` con una descripción completa de los cambios en el cuerpo del PR.
-- Después de abrir el PR: usar el subagente `adversarial-reviewer` sobre él, antes de darlo por terminado.
+
+La rama es por **unidad de trabajo**; el commit, por **petición**. Una unidad de trabajo son varias peticiones encadenadas sobre lo mismo, y todas viven en la misma rama.
+
+- Antes de tocar código, mira en qué rama estás. Si ya estás en una rama de trabajo —cualquiera que no sea `main` ni una del curso (`s1/start`, `s4/start`…)—, **sigue en ella**: no abras otra por cada petición. Solo si estás en `main` o en una `sN/*` se crea rama nueva (`git checkout -b feat/<slug>`). Nunca commitear directo en `main` ni en una `sN/*`.
+- Al cerrar cada petición: usar la skill `/commit`. Un commit por petición, dentro de la rama de la unidad de trabajo.
+- Si el cambio toca rutas, controladores, validadores o transformers de una capability, en el **mismo commit** van la regeneración del documento OpenAPI y el README de esa capability (`docs/capabilities/<nombre>/README.md`). Dejarlo para después es dejarlo sin hacer.
+- Al terminar la **unidad de trabajo entera** —no cada petición—, y una sola vez: `gh pr create` con una descripción completa de los cambios en el cuerpo del PR, y después el subagente `adversarial-reviewer` sobre ese PR, antes de darlo por terminado. Si el PR ya está abierto, los commits siguientes de esa unidad entran solos: no se abre otro ni se repite el pase del subagente.
 - No repitas ese resumen en el chat: la sesión se va a perder, el PR no. Responde solo con la URL del PR.

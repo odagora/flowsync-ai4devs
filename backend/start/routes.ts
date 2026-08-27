@@ -10,6 +10,7 @@
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
+import openapi from '@foadonis/openapi/services/main'
 
 router.get('/', () => {
   return { hello: 'world' }
@@ -47,3 +48,13 @@ router
       .use(middleware.auth())
   })
   .prefix('/api/v1')
+
+/**
+ * La documentación de la API: el propio documento OpenAPI en `/api.json` y
+ * `/api.yaml`, y la interfaz de Scalar que lo lee en `/api`.
+ *
+ * Se registra al final y fuera del grupo `/api/v1` a propósito: el documento
+ * describe la API, no forma parte de ella, y meterlo dentro lo dejaría
+ * versionado —y protegido— junto a lo que documenta.
+ */
+openapi.registerRoutes()
