@@ -21,6 +21,7 @@ test.group('Tasks | responsable', (group) => {
     await User.create({ fullName, email, password: 'secreto123' })
 
     const response = await client.post('/api/v1/auth/login').json({ email, password: 'secreto123' })
+    response.assertStatus(200)
 
     return response.body().data.token as string
   }
@@ -49,9 +50,14 @@ test.group('Tasks | responsable', (group) => {
       .header('Authorization', `Bearer ${tokenObservador}`)
     suelta.assertStatus(200)
 
+    // Si la tarea no sale en la lista, que el fallo lo diga y no sea un
+    // TypeError al leer `.assignee` de `undefined`.
+    const enLista = lista.body().data.find((task: { id: number }) => task.id === id)
+    if (!enLista) throw new Error(`la tarea ${id} recién creada no sale en la lista`)
+
     return {
       alta: alta.body().data.assignee,
-      lista: lista.body().data.find((task: { id: number }) => task.id === id).assignee,
+      lista: enLista.assignee,
       suelta: suelta.body().data.assignee,
     }
   }
