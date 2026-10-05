@@ -1,4 +1,4 @@
-# 2. Las delta-specs de OpenSpec como fuente de verdad viva
+# 1. Las delta-specs de OpenSpec como fuente de verdad viva
 
 ## Contexto
 
@@ -29,6 +29,8 @@ La spec viva de OpenSpec (`openspec/specs/<capability>/spec.md`) es la fuente de
 5. **El PRD y el backlog siguen siendo el origen de las historias** (FS-118, FS-142…). Dejan de ser contrato cuando un change las traduce a requisitos.
 
 ## Estado
+
+Reemplazada por el [ADR 0002](0002-tests-como-fuente-de-verdad-ejecutable.md), 2027-10-04.
 
 Aceptada, 2026-10-04. Registra una práctica que el proyecto ya seguía desde el 2026-08-13 (`5b5cd0a`, `2de0f39`) pero que no estaba escrita en ninguna parte.
 
