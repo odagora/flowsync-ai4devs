@@ -25,6 +25,8 @@ El contrato detallado (parámetros, cuerpos, códigos de respuesta y forma de ca
 - Interfaz: <http://localhost:3333/api>
 - JSON: <http://localhost:3333/api.json> · YAML: <http://localhost:3333/api.yaml>
 
+Fuera de producción, el documento servido no es un OpenAPI válido: `@foadonis/openapi` lo reconstruye en cada petición y en cada reconstrucción vuelve a añadir el parámetro `id` de las rutas `/tasks/{id}…`, que se va repitiendo. Para leer el contrato sirve; para generar clientes o validarlo, no. Solo cubre `tasks`: las operaciones de `auth` y `account` salen sin respuestas descritas.
+
 ### Piezas del backend
 
 - **Modelo** [`app/models/task.ts`](../../../backend/app/models/task.ts): `Task` con la relación `assignee` (`belongsTo` `User` por `assigneeId`), las constantes `TASK_STATUSES` y `DEFAULT_LIST_STATUSES`, y `isOverdueOn(referenceDay)`, la única definición de «vencida» del sistema.
