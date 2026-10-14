@@ -72,7 +72,8 @@ export class TaskDetail {
   @ApiProperty({
     type: 'boolean',
     description:
-      'Fecha estrictamente anterior al día de referencia `today` y tarea no hecha. Lo decide el servidor.',
+      'Fecha estrictamente anterior al día de referencia `today`. Lo decide el servidor. ' +
+      'Hoy no excluye las tareas hechas (`Task.isOverdueOn`), aunque la spec lo exige.',
   })
   declare isOverdue: boolean
 

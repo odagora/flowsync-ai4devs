@@ -12,7 +12,7 @@ Al escribir el ADR 0002, el estado del repo era este:
 - **La única regresión de la capability que se cazó la cazó un test, no la spec.** `ed2c748` volvió a exponer el email del responsable, la spec siguió diciendo lo contrario durante casi dos meses y fueron los tests de `462ca92` los que lo hicieron visible.
 - **El ciclo de un change** (proposal, design, tasks, delta y archivo) **resultaba caro para cambios pequeños.** Esa fricción explica que los tres refactors del 2026-08-18 se hicieran sin change.
 - **La batería existente** estaba en `backend/tests/functional/`, con Japa y `@japa/api-client` contra la API HTTP real:
-  - `auth`: 18 tests en 4 ficheros.
+  - `auth`: 20 tests en 4 ficheros.
   - `tasks`: 3 tests, que cubrían 1 de sus 32 requisitos.
 - **No había CI** (no existe `.github/`). Los tests solo corren cuando alguien lanza `npm test`.
 
@@ -59,6 +59,6 @@ Aceptada. Reemplaza al [ADR 0002](./0002-openspec-como-fuente-de-verdad.md).
 - **Un test puede consagrar un bug.** Si se escribe mirando el código y no la intención, fija como correcto el `200 []` de `2ccf2c1` o la tarea hecha y vencida de `707c9b6`. La spec congelada sigue siendo la mejor referencia de la intención para escribir esos tests, y es la razón para no borrarla.
 - **Lo construido sobre el ADR 0002 hay que revisarlo:**
   - [`docs/capabilities/tasks/README.md`](../capabilities/tasks/README.md) enlaza 32 requisitos por ancla.
-  - Las descripciones del documento OpenAPI y los comentarios de los tests citan escenarios de la spec.
+  - Las descripciones del documento OpenAPI repiten reglas de la spec (límite del título, `today` obligatorio), y los comentarios de los tests citan requisitos por su nombre.
   - Las skills `openspec-*` y `/opsx:*` del repo quedan obsoletas.
 - **Los tests se vuelven más lentos y más frágiles de mantener que un markdown.** Una suite que es contrato no puede tener tests intermitentes, y hoy comparte el fichero SQLite con el servidor de desarrollo. Si alguien olvida el aislamiento, los resultados dependen del orden de ejecución y de lo que haya en la base de datos local.

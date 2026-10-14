@@ -63,6 +63,7 @@ Aquí solo hay un índice. Cada enlace lleva al requisito y a sus escenarios.
 ### Divergencias conocidas entre el código y la spec
 
 - **Estado inventado en la lista.** La spec pide `422` para `GET /api/v1/tasks?status=archivado` ([escenario «Estado inventado»](../../../openspec/specs/tasks/spec.md#requirement-un-estado-que-no-existe-se-rechaza-no-se-responde-vacío)). Hoy `listTasksValidator` declara `status` como `vine.string().optional()` (commit `2ccf2c1`), así que un valor fuera de los tres pasa la validación y la API responde `200` con una lista vacía.
+- **Tarea hecha con la fecha pasada.** La spec dice que una tarea `done` nunca está vencida ([«Cuándo una tarea está vencida»](../../../openspec/specs/tasks/spec.md#requirement-cuándo-una-tarea-está-vencida)). Desde `707c9b6`, `Task.isOverdueOn` solo compara la fecha con el día de referencia, así que una tarea hecha con la fecha pasada llega con `isOverdue: true`.
 - **`today` en `PUT /due-date`.** El validador exige `today` también en el cuerpo de este endpoint, para resolver `isOverdue` en la misma respuesta. El escenario «Poner una fecha a una tarea que no tenía» solo menciona `dueDate`.
 
 Cuando se resuelva una de ellas, bórrala de esta lista.
