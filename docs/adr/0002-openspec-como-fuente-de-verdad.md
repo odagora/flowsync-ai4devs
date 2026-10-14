@@ -57,7 +57,7 @@ En concreto:
 
 ## Estado
 
-Aceptada.
+~~Aceptada.~~ **Reemplazada** por el [ADR 0003: los tests de integración, única fuente de verdad ejecutable del comportamiento](./0003-tests-como-fuente-de-verdad-ejecutable.md).
 
 La práctica se sigue de hecho desde el 2026-08-13: `2de0f39` llama a la spec «spec viva» y repara FS-142 con un change propio. Este ADR la deja por escrito. Las dos divergencias abiertas citadas en el contexto (`707c9b6` y `2ccf2c1`) no se corrigen aquí, y quedan pendientes de su propio change o arreglo.
 
