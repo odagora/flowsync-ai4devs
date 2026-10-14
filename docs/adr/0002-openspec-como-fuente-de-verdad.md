@@ -7,7 +7,7 @@ FlowSync describe su producto en cuatro capas que hoy conviven en el repo:
 1. **PRD**: [`docs/prd/`](../prd/), con el qué y el porqué del MVP y sus preguntas abiertas (`PA-n`).
 2. **Backlog**: [`docs/backlog/`](../backlog/), con historias de usuario y criterios de aceptación (`CA-n`). Su README afirma que «los criterios de aceptación viven en las historias».
 3. **OpenSpec**: [`openspec/`](../../openspec/), con `schema: spec-driven` en `config.yaml` y sin contexto ni reglas propias configuradas todavía. Contiene:
-   - **Specs principales**, una por capability: [`specs/auth/spec.md`](../../openspec/specs/auth/spec.md) (8 requisitos) y [`specs/tasks/spec.md`](../../openspec/specs/tasks/spec.md) (32 requisitos). Cada requisito se formula con `SHALL` y se prueba con escenarios `WHEN`/`THEN`.
+   - **Specs principales**, una por capability: [`specs/auth/spec.md`](../../openspec/specs/auth/spec.md) (19 requisitos) y [`specs/tasks/spec.md`](../../openspec/specs/tasks/spec.md) (32 requisitos). Cada requisito se formula con `SHALL` y se prueba con escenarios `WHEN`/`THEN`.
    - **Changes archivados** en `changes/archive/`, los tres con fecha `2026-08-13`. Cada uno lleva `proposal.md`, `design.md`, `tasks.md` y unas **delta-specs** que no reescriben la spec, sino que dicen qué requisitos entran (`ADDED`) y cuáles se sustituyen (`MODIFIED`):
 
      | Change | `tasks` | `auth` |
@@ -80,4 +80,4 @@ La práctica se sigue de hecho desde el 2026-08-13: `2de0f39` llama a la spec «
 - **Las specs crecen y se vuelven caras de leer.** `tasks/spec.md` tiene 753 líneas y mezcla requisitos de API con requisitos de pantalla. Un `MODIFIED` obliga a reescribir el requisito entero, y un requisito tocado por varios changes, como «Una sola vista de tareas», va acumulando escenarios de orígenes distintos.
 - **Los enlaces por ancla son frágiles.** Renombrar el título de un requisito cambia su ancla y rompe en silencio los enlaces del README, del OpenAPI y de los comentarios.
 - **Hay que mantener el conocimiento de la herramienta.** OpenSpec, el esquema `spec-driven` y la semántica ADDED/MODIFIED/REMOVED tienen que aprenderlos todos los que tocan el repo, personas y agentes. `openspec/config.yaml` aún no fija contexto ni reglas que lo hagan explícito.
-- **Las líneas base no tienen historia.** La spec de `auth` no tiene change de origen, así que sus 8 requisitos no tienen ningún registro de por qué son así.
+- **Las líneas base no tienen historia.** La spec de `auth` no tiene change de origen, así que los requisitos que traía antes de `add-task-list` no tienen ningún registro de por qué son así.
