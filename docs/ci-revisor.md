@@ -28,9 +28,10 @@ Hasta que no se hagan, el job no revisa nada.
    el PR que introduce (o cambia) este workflow no se revisa a sí mismo: hay que fusionarlo primero.
 4. **Comprobar en un PR real** que aparecen comentarios de `claude[bot]`. Un check verde no basta:
    también es verde cuando se salta por el motivo del paso 3.
-5. *(Opcional)* **Crear `REVIEW.md` en la raíz** con la calibración del revisor: qué cuenta como
-   hallazgo, qué severidades usar, dónde no reportar (código generado, lockfiles…). Mientras no
-   exista, el revisor usa los criterios de `.claude/agents/adversarial-reviewer.md`.
+
+La calibración del revisor (qué es grave, tope de sugerencias, dónde no reportar, evidencia) vive en
+`REVIEW.md`, en la raíz. Si se añade una comprobación nueva al CI, quítala de lo que el revisor
+reporta allí.
 
 ## Credencial
 

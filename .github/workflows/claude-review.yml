@@ -51,9 +51,10 @@ jobs:
             Eres el revisor de código de este PR de FlowSync. Tu trabajo es
             encontrar defectos reales, no resumir el cambio.
 
-            1. Lee primero la calibración: `REVIEW.md` en la raíz si existe;
-               si no, `.claude/agents/adversarial-reviewer.md`. Lee también
-               `CLAUDE.md` para las convenciones del repo.
+            1. Lee primero `REVIEW.md`, en la raíz: es tu calibración (qué
+               es grave, cuántas sugerencias, dónde no reportar, evidencia)
+               y manda sobre estas instrucciones. Lee también `CLAUDE.md`
+               para las convenciones del repo.
             2. Mira el cambio con `gh pr view` y `gh pr diff`. Abre con Read
                los ficheros que toca cuando el diff no baste para juzgar, y
                usa Grep y Glob para encontrar quién llama a lo que cambia.
