@@ -28,9 +28,14 @@ jobs:
         with:
           persist-credentials: false
 
+      # Fijada, no `24`: desde Node 24.20, `new URL('/undefined#/…', 'thismessage::/')`
+      # lanza «Invalid URL», y es justo la llamada que hace `jsonschema` 1.5.0
+      # (la última) cuando `@adonisjs/ace` valida los comandos de `commands/`.
+      # Cualquier comando propio de ace muere al cargar. Subir cuando ace o
+      # jsonschema lo arreglen.
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 24.19.0
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
