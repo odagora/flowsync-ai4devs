@@ -32,13 +32,13 @@ ejecuta.
    se salta con «Workflow validation failed» y el job sale **en verde sin haber revisado nada**. Por eso
    el PR que introduce o cambia este workflow no se revisa a sí mismo: la revisión empieza en el
    siguiente PR, una vez el workflow está en `main`.
-4. **Crear `REVIEW.md` en la raíz.** Es el archivo de calibración: qué es grave aquí, cuántas
-   sugerencias como mucho y dónde no reportar. El prompt manda leerlo primero. Hoy no existe en esta
-   rama, y sin él el revisor aplica su propio criterio. A partir de ese momento, el criterio se ajusta
-   editando ese archivo, no el workflow.
-5. **Comprobar la primera ejecución de verdad.** Un check verde no basta. En el primer PR posterior a
-   los pasos 1–4 tienen que aparecer comentarios de `claude[bot]`. Si el job está en verde y no hay
+4. **Comprobar la primera ejecución de verdad.** Un check verde no basta. En el primer PR posterior a
+   los pasos 1–3 tienen que aparecer comentarios de `claude[bot]`. Si el job está en verde y no hay
    comentarios, el registro de la ejecución dice por qué; el caso típico es el paso 3.
+
+La calibración del revisor vive en [`REVIEW.md`](../REVIEW.md), que el prompt le manda leer primero:
+qué es grave y qué sugerencia, el tope de sugerencias, dónde no reportar y la evidencia que se exige.
+Para ajustar su criterio se edita ese archivo, no el workflow.
 
 Atajo para los pasos 1 y 2: desde Claude Code, en local, `/install-github-app` instala la app y crea el
 secreto en un mismo flujo.
