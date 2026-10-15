@@ -21,8 +21,9 @@ recuento («y 7 sugerencias menores más, de nombres y estilo»). Los graves no 
 
 ## Dónde no reportar
 
-- La deriva entre el código y `docs/api/openapi.json`: ya la vigila `openapi:check` en CI. Que el
-  contrato contradiga **la spec** sí es grave.
+- Que `docs/api/openapi.json` no coincida con lo que genera el código: eso lo vigila `openapi:check`
+  en CI. Sí es grave una descripción del contrato (en los decoradores) que afirma algo falso, porque
+  el generador la copia tal cual, y que el contrato contradiga **la spec**.
 - Formato (Prettier): no cambia el comportamiento.
 - Código generado: `backend/.adonisjs/`, `backend/database/schema.ts`, `frontend/src/components/ui/`
   (shadcn) y `docs/api/openapi.json`, salvo para señalar que falta regenerarlo.
