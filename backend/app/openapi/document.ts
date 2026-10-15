@@ -19,10 +19,11 @@ export function versionedDocumentPath() {
 }
 
 /**
- * Construye el documento OpenAPI exactamente igual que el que se sirve en
- * `/api.json` y lo serializa de forma estable: sangrado de dos espacios y
- * salto de línea final, para que el fichero versionado dé diffs legibles y
- * dos generaciones sobre el mismo código produzcan los mismos bytes.
+ * Construye el mismo documento que se sirve en `/api.json` —mismo contenido,
+ * no mismos bytes: el servidor lo manda en una línea— y lo serializa de forma
+ * estable: sangrado de dos espacios y salto de línea final, para que el
+ * fichero versionado dé diffs legibles y dos generaciones sobre el mismo
+ * código produzcan los mismos bytes.
  */
 export async function renderDocument() {
   // El generador lee las rutas de `router.toJSON()`, que solo lista las ya

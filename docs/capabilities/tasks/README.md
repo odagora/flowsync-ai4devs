@@ -73,8 +73,9 @@ Ese fichero es documentación, no validación: describe lo que los controladores
 transformer o un validador, se actualiza en el mismo commit.
 
 El servidor construye el documento en cada petición, y además hay una copia versionada en
-[`docs/api/openapi.json`](../../api/openapi.json), byte a byte igual a lo que sirve `/api.json`. Desde
-`backend/`:
+[`docs/api/openapi.json`](../../api/openapi.json) con el mismo contenido que sirve `/api.json`. No son
+los mismos bytes: el servidor lo manda en una sola línea y el fichero va sangrado, así que se comparan
+parseados, no con `diff`. Desde `backend/`:
 
 - `npm run openapi:generate` — regenera `docs/api/openapi.json` a partir del código. Se corre tras
   cualquier cambio de contrato y el diff se commitea junto con el de `.adonisjs/`.
