@@ -1,0 +1,44 @@
+# Falla si `docs/api/openapi.json` no coincide con el documento que genera el
+# código. Solo compara: no regenera el fichero ni commitea nada. Si falla, el
+# arreglo es correr `npm run openapi:generate` en local y commitear el diff.
+name: OpenAPI check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Solo lee el repositorio; no comenta, no sube artefactos ni escribe nada.
+permissions:
+  contents: read
+
+concurrency:
+  group: openapi-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  openapi-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      # El comando arranca la app, y `start/env.ts` valida el entorno al
+      # arrancar. Mismo setup que en local; la APP_KEY es desechable.
+      - name: Prepare .env
+        run: cp .env.example .env && node ace generate:key
+
+      - run: npm run openapi:check
