@@ -25,9 +25,14 @@ jobs:
         with:
           persist-credentials: false
 
+      # Versión exacta a propósito. Desde Node 24.21, `new URL()` rechaza las
+      # URLs relativas que monta `jsonschema@1.5.0` (dependencia de
+      # `@adonisjs/ace`) al validar los comandos de `commands/`, y cualquier
+      # `node ace <comando propio>` falla con «Invalid URL». No hay versión
+      # corregida de `jsonschema`; cuando la haya, esto puede volver a `24`.
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 24.18.1
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
