@@ -18,6 +18,11 @@ ejecuta.
    pide `id-token: write` porque la acción cambia el token OIDC del job por un token de esa app. Con él
    comenta como `claude[bot]`. Sin la app instalada, el intercambio falla. *No verificado desde aquí:
    la API no deja comprobarlo sin un token de la propia app.*
+
+   Ojo con el alcance: el bloque `permissions` del workflow solo limita el `GITHUB_TOKEN` del job.
+   La acción lo sustituye por el token de la app, que por defecto pide `contents`, `pull_requests` e
+   `issues` en escritura (`src/github/token.ts`, v1.0.250). Lo que de verdad acota lo que puede hacer
+   el revisor es `--allowedTools`, no `permissions`.
 2. **Crear el secreto de la credencial** en *Settings → Secrets and variables → Actions → New
    repository secret*, con el nombre exacto que corresponda al camino elegido
    ([abajo](#la-credencial)). En el fork ya existe un secreto `CLAUDE_CODE_OAUTH_TOKEN`, creado el
@@ -99,8 +104,13 @@ claude_args: |
 - **`--effort medium`.** Acota cuánto razona el modelo antes de responder. Menos razonamiento consume
   menos tokens.
 - **`--max-turns 40`.** Es el techo de idas y vueltas del agente: cada `gh pr diff`, cada Read y cada
-  comentario cuenta como turno. Al llegar al tope, la revisión se corta donde esté. Por eso Read, Grep y
-  Glob están permitidos: sin ellos, cada intento de leer un archivo se deniega y gasta un turno.
+  comentario cuenta como turno. Al llegar al tope, la revisión se corta donde esté. Read, Grep y Glob
+  van en la lista explícita para que ningún intento de leer un archivo se deniegue y gaste un turno en
+  balde. Los comentarios en línea se publican con `confirmed: true`, así que un corte no se lleva los
+  hallazgos ya hechos.
+- **Clasificador de comentarios.** Un comentario en línea sin `confirmed: true` se guarda y, al acabar
+  la sesión, la acción lo clasifica (hallazgo real o prueba) antes de publicarlo. Con clave de API, eso
+  es una llamada más al modelo; el prompt la evita pidiendo `confirmed: true`.
 - **`timeout-minutes: 10`.** Es el techo de reloj del job. Acota los minutos de runner y, de paso, el
   gasto de un revisor atascado.
 - **`concurrency`.** Un push nuevo cancela la revisión en curso del anterior.
@@ -136,8 +146,9 @@ un PR desde un fork **se salta**: el check sale como *skipped*, no en rojo.
 if: github.event.pull_request.head.repo.full_name == github.repository
 ```
 
-Lo mismo pasa con los PRs que abren bots (como Dependabot), que tampoco reciben los secretos. Los
-borradores se revisan al marcarlos como listos.
+Los PRs que abren bots (como Dependabot) también se saltan. No reciben los secretos, y además la
+comprobación de permisos de la acción deja pasar siempre a los actores `[bot]`, así que el filtro
+tiene que estar en el `if` del workflow. Los borradores se revisan al marcarlos como listos.
 
 **Lo que no hay que hacer para cubrir los forks es pasar a `pull_request_target`.** Ese evento sí da
 acceso a los secretos, pero junto con código y texto que escribe un tercero, y basta un prompt
@@ -148,7 +159,21 @@ mantenedor suba la rama al repositorio y abra el PR desde ahí, o que lo revise 
 
 Excluir los forks acota el riesgo a quien ya tiene escritura en el repositorio, pero no lo elimina. El
 revisor lee lo que escribe el autor del PR (diff, título, descripción, comentarios en el código), y con
-ese contenido se le puede intentar dar órdenes. Lo que puede hacer está limitado por `--allowedTools`:
-leer ficheros del checkout, ver el PR y comentar en él, sin Bash general ni escritura. Aun así,
-`REVIEW.md` y `CLAUDE.md` se leen de la versión del PR, así que un PR puede cambiar la calibración con
-la que se revisa a sí mismo. No amplíes las herramientas permitidas sin tener esto en cuenta.
+ese contenido se le puede intentar dar órdenes. `--allowedTools` le quita Bash general y la escritura
+de ficheros, pero no es una contención completa:
+
+- **Fuga de la credencial por un comentario.** `Read` no está restringido a una ruta, así que puede
+  leer ficheros del runner fuera del checkout, y el proceso del revisor tiene la credencial en su
+  entorno. `Bash(gh pr comment:*)` admite cualquier argumento, incluido `--body-file`. Además, los
+  comentarios que pasan por `gh pr comment` no se sanean ni se les tachan secretos, a diferencia de
+  los que van por el MCP de comentarios en línea. Un prompt injection en el PR podría encadenar las dos
+  cosas y publicar la credencial en un comentario. Si eso no es aceptable, hay dos salidas: quitar el
+  resumen por `gh pr comment` (por ejemplo, pasando a `track_progress: true` y a la herramienta MCP
+  `mcp__github_comment__update_claude_comment`, que sí sanea), o restringir `Read` a rutas del
+  checkout.
+- **La calibración la controla el PR.** La acción restaura `CLAUDE.md`, `CLAUDE.local.md` y `.claude/`
+  desde la rama base antes de ejecutar (`src/github/operations/restore-config.ts`, v1.0.250). Por eso
+  el revisor lee el `CLAUDE.md` de la base, no el del PR. `REVIEW.md` no está en esa lista: se lee de
+  la versión del PR, así que un PR puede cambiar la calibración con la que se revisa a sí mismo.
+
+No amplíes las herramientas permitidas sin tener esto en cuenta.

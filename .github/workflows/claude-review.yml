@@ -65,10 +65,15 @@ jobs:
             `archivo:línea` donde la has leído. Lo que no hayas leído, no lo
             afirmes.
 
+            Antes de comentar, mira con `gh pr view --comments` lo que ya se
+            publicó en revisiones anteriores y no repitas hallazgos.
+
             Publica cada hallazgo concreto como comentario en línea sobre la
-            línea afectada, con su severidad y por qué es un problema. Al
-            final, un único comentario de resumen con `gh pr comment`. Si no
-            encuentras nada que lo merezca, dilo en ese resumen en una línea.
+            línea afectada, con su severidad y por qué es un problema, y con
+            `confirmed: true` para que se publique en el momento y no se
+            pierda si la ejecución se corta. Al final, un único comentario de
+            resumen con `gh pr comment --body "..."`. Si no encuentras nada
+            que lo merezca, dilo en ese resumen en una línea.
 
             No redirijas salida a ficheros (nada de `>`, `>>`, `tee` ni
             ficheros temporales): lee la salida directa de cada comando.
