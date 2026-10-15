@@ -1,0 +1,40 @@
+name: OpenAPI
+
+# Comprueba que `docs/api/openapi.json` coincide con el documento que genera el
+# código. Solo compara: si no coincide, el job falla y el arreglo es correr
+# `npm run openapi:generate` en local y commitear el resultado.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Solo lee el repo: ni comenta, ni escribe, ni sube nada.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: openapi:check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      # El comando arranca la app, y `start/env.ts` valida el entorno al
+      # arrancar. La clave es desechable: el documento no depende de ella.
+      - run: cp .env.example .env && node ace generate:key
+
+      - run: npm run openapi:check
