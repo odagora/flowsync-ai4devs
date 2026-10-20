@@ -24,7 +24,7 @@ jobs:
     # Ver `docs/ci-revisor.md`.
     if: >-
       github.event.pull_request.head.repo.full_name == github.repository
-      && !endsWith(github.actor, '[bot]')
+      && !endsWith(github.event.pull_request.user.login, '[bot]')
       && !github.event.pull_request.draft
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -61,8 +61,9 @@ jobs:
             3. Si el cambio toca una capability, contrástalo con su spec en
                `openspec/specs/<capability>/spec.md`.
 
-            Publica cada hallazgo concreto como comentario en línea sobre la
-            línea afectada, con severidad y por qué es un problema. Al final,
+            Publica cada hallazgo grave como comentario en línea sobre la línea
+            afectada, con severidad y por qué es un problema; las sugerencias
+            menores, con el tope que fija `REVIEW.md`. Al final,
             un único comentario de resumen con `gh pr comment`. Si no
             encuentras nada que lo merezca, dilo en ese resumen en una línea.
 

@@ -17,10 +17,9 @@ El workflow está commiteado, pero **no funciona hasta que se completen los paso
 2. **Crear el secreto de la credencial** en *Settings → Secrets and variables → Actions → New
    repository secret*. Hay que elegir uno de los dos caminos de la [sección de abajo](#la-credencial),
    y el nombre del secreto tiene que ser exactamente el que se indica allí.
-3. **Que Actions vuelva a ejecutarse en la organización.** A 14 de octubre de 2026, la organización
-   LIDR-academy está marcada por GitHub («The LIDR-academy organization has been flagged») y los
-   workflows de los PRs no llegan a lanzarse. Mientras siga así, ni este job ni `openapi:check`
-   corren. Se resuelve con el enlace *contact support* del aviso, y también tiene que hacerlo un owner.
+3. **Que Actions vuelva a ejecutarse en la organización.** Si la organización está marcada por GitHub
+   («The LIDR-academy organization has been flagged», como pasaba el 14 de octubre de 2026), los
+   workflows de los PRs no llegan a lanzarse y este job tampoco corre. Se resuelve con el enlace *contact support* del aviso, y también tiene que hacerlo un owner.
 4. **Comprobar la primera ejecución.** Una vez hechos los pasos 1–3, el primer PR que se abra o
    actualice debería tener un check *Revisión de Claude* y los comentarios de `claude[bot]`. Si el job
    sale en verde pero no hay comentarios, el registro de la ejecución dice por qué.
@@ -112,8 +111,8 @@ claude_args: |
 
 ## Qué PRs no se revisan
 
-Además de los forks (abajo), el job se salta los PRs abiertos por bots (`github.actor` acabado en
-`[bot]`, como Dependabot), que tampoco reciben los secretos de Actions, y los PRs en borrador: estos se
+Además de los forks (abajo), el job se salta los PRs abiertos por bots (autor del PR, `pull_request.user.login`,
+acabado en `[bot]`, como Dependabot), que tampoco reciben los secretos de Actions, y los PRs en borrador: estos se
 revisan al marcarlos como listos (`ready_for_review`).
 
 ## PRs desde un fork en un repositorio público
@@ -141,8 +140,12 @@ mantenedor suba la rama al repo principal y abra el PR desde ahí, o que lo revi
 
 Excluir forks no elimina el riesgo, solo lo acota a quien ya tiene escritura en el repo. El revisor lee
 contenido que escribe el autor del PR (diff, título, descripción, comentarios en el código), y con ese
-contenido se le puede intentar dar órdenes. Lo que puede hacer está limitado por `--allowedTools`:
-leer ficheros del checkout y comentar en el PR, sin Bash general ni escritura. La credencial le llega a
-la acción como variable de entorno (`CLAUDE_CODE_OAUTH_TOKEN`), no como fichero del repo. Aun así,
+contenido se le puede intentar dar órdenes. Lo que puede hacer lo limita `--allowedTools`
+(leer, buscar y comentar en el PR, sin Bash general ni escritura), **pero ese límite no protege la
+credencial**: `Read` no está confinado al checkout y `gh pr comment` acepta `--body-file`, así que una
+inyección podría leer el entorno del proceso y publicarlo en el PR; en un repo público, a la vista de todos.
+La prohibición de redirigir salida del prompt es una instrucción, no una barrera. Es un riesgo aceptado,
+limitado a quien tiene escritura; para cerrarlo habría que dejar solo el comentario en línea y quitar
+`gh pr comment`. Además,
 `REVIEW.md` y `CLAUDE.md` se leen de la versión del PR, así que un PR puede cambiar la calibración con
 la que se revisa a sí mismo. No amplíes las herramientas permitidas sin tener esto en cuenta.

@@ -4,7 +4,7 @@ Calibración del revisor de PRs. Léela entera antes de mirar el diff; `CLAUDE.m
 
 ## Qué es grave
 
-Solo esto es grave (bloquea el merge):
+Solo esto es grave (hay que arreglarlo antes de mergear; el job solo comenta, no bloquea):
 
 - Auth rota o saltada: ruta de `/api/v1` sin `.use(middleware.auth())` que debería tenerlo, o dato de otro usuario accesible.
 - Fuga de datos: modelo crudo devuelto en vez de un transformer (campos como `password`), secretos o tokens en código, logs o respuestas.
@@ -20,7 +20,7 @@ Como máximo **3 sugerencias menores** por revisión, las de más valor, cada un
 
 ## Dónde no reportar
 
-- Lo que ya vigilan otras comprobaciones: formato (Prettier), lint (eslint en backend, oxlint en frontend), tipos (`tsc`, `npm run build`), tests (`node ace test`) y el diff autogenerado de `backend/.adonisjs/` y `backend/database/schema.ts`.
+- Lo que vigile otra comprobación del repositorio cuando exista en CI: formato (Prettier), lint (eslint en backend, oxlint en frontend), tipos (`tsc`, `npm run build`), tests (`node ace test`) y el diff autogenerado de `backend/.adonisjs/` y `backend/database/schema.ts`.
 - Ficheros generados o de terceros: `backend/.adonisjs/`, `backend/database/schema.ts`, `frontend/src/components/ui/` (shadcn), lockfiles.
 - Fuera del diff: código que el PR no toca.
 - Preferencias de estilo sin un defecto concreto detrás, y comentarios o idioma de la documentación.
