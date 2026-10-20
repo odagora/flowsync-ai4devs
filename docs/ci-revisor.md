@@ -26,9 +26,8 @@ El workflow está commiteado, pero **no funciona hasta que se completen los paso
    sale en verde pero no hay comentarios, el registro de la ejecución dice por qué.
 
 La calibración del revisor —qué es grave y qué sugerencia, dónde no reportar, qué evidencia se exige— va
-en un `REVIEW.md` en la raíz, que el prompt le manda leer primero **si existe**. Hoy ese archivo no está
-en el repo: sin él, el revisor trabaja solo con `CLAUDE.md` y el diff. Para ajustar su criterio se
-escribe ese archivo, no el workflow.
+en [`REVIEW.md`](../REVIEW.md), en la raíz, que el prompt le manda leer primero. Para ajustar su criterio
+se edita ese archivo, no el workflow.
 
 Atajo para los pasos 1 y 2: desde Claude Code, en local, `/install-github-app` instala la app y crea el
 secreto en un mismo flujo.
@@ -145,5 +144,5 @@ contenido que escribe el autor del PR (diff, título, descripción, comentarios 
 contenido se le puede intentar dar órdenes. Lo que puede hacer está limitado por `--allowedTools`:
 leer ficheros del checkout y comentar en el PR, sin Bash general ni escritura. La credencial le llega a
 la acción como variable de entorno (`CLAUDE_CODE_OAUTH_TOKEN`), no como fichero del repo. Aun así,
-`REVIEW.md` (si existe) y `CLAUDE.md` se leen de la versión del PR, así que un PR puede cambiar la calibración con
+`REVIEW.md` y `CLAUDE.md` se leen de la versión del PR, así que un PR puede cambiar la calibración con
 la que se revisa a sí mismo. No amplíes las herramientas permitidas sin tener esto en cuenta.
