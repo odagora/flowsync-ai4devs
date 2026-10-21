@@ -30,8 +30,13 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          # @adonisjs/core 7 exige Node >= 24.
-          node-version: 24
+          # @adonisjs/core 7 exige Node >= 24, pero no vale cualquier 24: desde
+          # 24.20 el parser de URL rechaza `new URL('/undefined#/...',
+          # 'thismessage::/')`, que es lo que hace jsonschema 1.5.0 (la última)
+          # cuando ace valida los comandos de `commands/`, y `openapi:check`
+          # muere con «Invalid URL» antes de arrancar. Se fija la última que
+          # funciona hasta que jsonschema o ace lo resuelvan.
+          node-version: 24.19.0
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
