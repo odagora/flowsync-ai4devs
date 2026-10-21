@@ -1,0 +1,51 @@
+# Comprueba que docs/api/openapi.json sigue al día con el código.
+#
+# Solo compara: si el documento versionado no coincide con el que sale de las
+# rutas y los decoradores, el job falla con la lista de diferencias. No lo
+# regenera ni hace commit; eso se hace en local con `npm run openapi:generate`.
+name: OpenAPI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Solo lee el repositorio. Ningún paso escribe en GitHub.
+permissions:
+  contents: read
+
+jobs:
+  openapi-check:
+    name: openapi:check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # El job no hace push: no hace falta dejar el token en .git/config.
+          persist-credentials: false
+
+      - uses: actions/setup-node@v5
+        with:
+          # @adonisjs/core 7 exige Node >= 24, pero no vale cualquier 24: desde
+          # 24.20 el parser de URL rechaza `new URL('/undefined#/...',
+          # 'thismessage::/')`, que es lo que hace jsonschema 1.5.0 (la última)
+          # cuando ace valida los comandos de `commands/`, y `openapi:check`
+          # muere con «Invalid URL» antes de arrancar. Se fija la última que
+          # funciona hasta que jsonschema o ace lo resuelvan.
+          node-version: 24.19.0
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      # `openapi:check` arranca la app, y start/env.ts valida el entorno al
+      # arrancar: sin un .env con APP_KEY no llega a construir el documento.
+      # La clave es desechable; aquí no se cifra nada.
+      - name: Prepara el .env
+        run: cp .env.example .env && node ace generate:key
+
+      - run: npm run openapi:check
