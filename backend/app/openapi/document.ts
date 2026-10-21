@@ -84,8 +84,10 @@ export function diffOpenAPIDocuments(
     const keys = new Set([...Object.keys(before), ...Object.keys(after)])
     return [...keys].flatMap((key) => {
       const path = childPointer(pointer, key)
-      if (!(key in after)) return [{ kind: 'removed' as const, pointer: path, value: before[key] }]
-      if (!(key in before)) return [{ kind: 'added' as const, pointer: path, value: after[key] }]
+      if (!Object.hasOwn(after, key))
+        return [{ kind: 'removed' as const, pointer: path, value: before[key] }]
+      if (!Object.hasOwn(before, key))
+        return [{ kind: 'added' as const, pointer: path, value: after[key] }]
       return diffOpenAPIDocuments(before[key], after[key], path)
     })
   }

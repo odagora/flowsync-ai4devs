@@ -1,0 +1,3 @@
+# openapi:check compara byte a byte con lo que escribe openapi:generate (LF):
+# un checkout con CRLF lo haría fallar sin que el contrato haya cambiado.
+docs/api/openapi.json text eol=lf

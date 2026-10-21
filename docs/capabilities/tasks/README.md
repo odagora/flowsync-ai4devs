@@ -72,7 +72,8 @@ transformers: así el documento **no puede** enseñar el vencimiento en la lista
 Ese fichero es documentación, no validación: describe lo que los controladores ya hacen. Si cambia un
 transformer o un validador, se actualiza en el mismo commit.
 
-El documento se construye en cada petición, pero también queda versionado en
+El servidor construye el documento en tiempo de ejecución (en cada petición; en producción, una vez
+y cacheado), pero también queda versionado en
 **[`docs/api/openapi.json`](../../api/openapi.json)**. Desde `backend/`, `npm run openapi:generate` lo
 reescribe a partir del código y `npm run openapi:check` comprueba que sigue al día: lo regenera en un
 directorio temporal, lo compara con el versionado y, si no coinciden, enumera las diferencias y sale

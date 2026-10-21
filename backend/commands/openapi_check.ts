@@ -35,9 +35,16 @@ export default class OpenAPICheck extends BaseCommand {
     const committedPath = openAPIDocumentPath(this.app)
     const displayPath = relative(process.cwd(), committedPath)
 
-    const committed = await readFile(committedPath, 'utf-8').catch(() => null)
-    if (committed === null) {
-      this.#fail(`No existe ${displayPath}.`)
+    let committed: string
+    try {
+      committed = await readFile(committedPath, 'utf-8')
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code
+      this.#fail(
+        code === 'ENOENT'
+          ? `No existe ${displayPath}.`
+          : `No se puede leer ${displayPath}: ${(error as Error).message}`
+      )
       return
     }
 
