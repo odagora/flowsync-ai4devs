@@ -22,9 +22,9 @@ Sin estos pasos el workflow existe, pero no revisa nada.
    revisado nada**. Por eso el PR que añade este fichero no se revisa a sí mismo, y cualquier cambio
    posterior al workflow tiene que llegar a `main` por PR antes de que surta efecto. Los PRs de este
    repo apuntan a `sN/start`, así que hay que hacerlo aparte.
-4. **Crear `REVIEW.md` en la raíz**, el archivo de calibración del revisor: qué buscar, qué ignorar
-   y qué cuenta como grave en este proyecto. El prompt le dice al revisor que lo lea si existe. Hoy
-   no existe en esta rama, así que de momento revisa solo con las instrucciones generales y `CLAUDE.md`.
+4. **Que [`REVIEW.md`](../REVIEW.md) llegue a la rama del PR.** Es el archivo de calibración del
+   revisor: qué cuenta como grave, el tope de sugerencias, dónde no reportar y qué evidencia exigir.
+   El revisor lee el de la rama revisada; si no está, revisa solo con el prompt y `CLAUDE.md`.
 5. **Comprobar el primer PR a mano.** Un check verde no basta (ver el punto 3): tiene que haber
    comentarios de `claude[bot]` en el PR.
 
