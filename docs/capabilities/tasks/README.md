@@ -70,8 +70,14 @@ Las formas que se repiten viven en
 transformers: así el documento **no puede** enseñar el vencimiento en la lista.
 
 Ese fichero es documentación, no validación: describe lo que los controladores ya hacen. Si cambia un
-transformer o un validador, se actualiza en el mismo commit. El documento se construye en cada
-petición y no hay fichero que generar; lo que se commitea es el diff de `.adonisjs/`.
+transformer o un validador, se actualiza en el mismo commit.
+
+El documento se construye en cada petición, pero también queda versionado en
+**[`docs/api/openapi.json`](../../api/openapi.json)**. Desde `backend/`, `npm run openapi:generate` lo
+reescribe a partir del código y `npm run openapi:check` comprueba que sigue al día: lo regenera en un
+directorio temporal, lo compara con el versionado y, si no coinciden, enumera las diferencias y sale
+con código distinto de cero, sin tocar el fichero. Con el documento se commitea también el diff
+regenerado de `.adonisjs/`.
 
 ## Reglas de negocio: dónde vive cada una
 
