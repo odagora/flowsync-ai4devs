@@ -3,8 +3,8 @@
 [`.github/workflows/claude-review.yml`](../.github/workflows/claude-review.yml) lanza
 [`anthropics/claude-code-action@v1`](https://github.com/anthropics/claude-code-action) sobre cada pull
 request que no sea borrador y que no venga de un fork. El revisor publica los hallazgos como
-comentarios en línea sobre el diff y deja un comentario general con el resumen. Solo lee el
-repositorio: no hace commits ni cambia nada.
+comentarios en línea sobre el diff y deja un comentario general con el resumen. No toca el código:
+lee el repositorio y lo único que escribe son esos comentarios.
 
 ## Pasos manuales pendientes
 
@@ -76,9 +76,10 @@ un repositorio público son gratis.
   más barato que Opus y suficiente para revisar un diff y los ficheros que lo rodean. El esfuerzo
   medio limita cuánto razona antes de responder, que también se paga.
 - **Topes**:
-  - `--max-turns 40` corta la sesión a 40 turnos, que es lo que más acota el gasto de una revisión.
+  - `--max-turns 40` corta la sesión a 40 turnos, así que una revisión que se enreda no sigue gastando.
   - `timeout-minutes: 10` mata el job a los 10 minutos.
   - El grupo de `concurrency` cancela la revisión en curso cuando llega un push nuevo al mismo PR.
+    Está a nivel de job, así que un evento que el `if` salta (borrador, fork) no cancela nada.
   - Los borradores no se revisan.
 - **Herramientas de lectura** (`Read`, `Grep`, `Glob`): sin ellas el revisor no podría abrir ni
   `REVIEW.md` ni los ficheros del cambio, y cada intento denegado gasta un turno.
@@ -92,10 +93,13 @@ Edita `claude_args` en el workflow:
 
 ```yaml
 claude_args: |
-  --model opus --effort high   # más profundo y más caro
+  --model opus --effort high
   --max-turns 40
-  ...
+  --allowedTools "Read,Grep,Glob,mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
 ```
+
+Solo cambia la primera línea; `opus --effort high` es más profundo y más caro. No añadas comentarios
+`#` dentro de `claude_args`: el bloque `|` los pasa tal cual a la CLI.
 
 `--model` acepta alias (`sonnet`, `opus`, `haiku`) o un ID completo de modelo. Recuerda el paso 3: el
 cambio no tiene efecto en los PRs hasta que el workflow modificado llegue a `main`.

@@ -19,9 +19,9 @@ resumen: «y N sugerencias menores más (nombres: 3, duplicación: 2…)».
 
 ## Dónde no reportar
 
-- Formato, estilo e imports: lo vigilan Prettier, eslint (backend) y oxlint (frontend).
-- Tipos: lo vigila `tsc` (`npm run typecheck` en el backend, `npm run build` en el frontend).
 - Que `docs/api/openapi.json` esté desfasado: lo vigila `openapi:check` en CI.
+- Formato, estilo e imports: son de Prettier, eslint (backend) y oxlint (frontend). No corren en CI,
+  solo en local. Los errores de tipos **sí** se reportan, porque nada los comprueba en el PR.
 - Código generado, que no se edita a mano: `backend/database/schema.ts`, `backend/.adonisjs/`,
   `docs/api/openapi.json`, `frontend/src/components/ui/` y los `package-lock.json`.
 - `openspec/changes/archive/`: es histórico.

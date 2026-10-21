@@ -9,11 +9,6 @@ on:
   pull_request:
     types: [opened, synchronize, ready_for_review, reopened]
 
-# Un push nuevo deja obsoleta la revisión en curso: se cancela para no pagarla.
-concurrency:
-  group: claude-review-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
-
 jobs:
   review:
     name: claude-review
@@ -24,6 +19,12 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Un push nuevo deja obsoleta la revisión en curso: se cancela para no
+    # pagarla. A nivel de job y no de workflow, para que un evento que el `if`
+    # salta (un push a un borrador) no cancele una revisión que sí vale.
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
     permissions:
       contents: read
       # Para comentar en el PR.
