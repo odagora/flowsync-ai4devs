@@ -1,6 +1,6 @@
 # Alcance del MVP de FlowSync
 
-Este documento recoge el alcance acordado del MVP y sirve de base para el PRD, que todavía no está escrito. Se queda a nivel de producto: el modelo de datos, los endpoints, los nombres en código y cómo se consigue la frescura de la información se deciden en la spec de implementación.
+Este documento recoge el alcance acordado del MVP y sirve de base para el PRD ([`flowsync-mvp.md`](./flowsync-mvp.md)). Se queda a nivel de producto: el modelo de datos, los endpoints, los nombres en código y cómo se consigue la frescura de la información se deciden en la spec de implementación.
 
 **Criterio de recorte.** Solo entra lo que hace falta para responder, sin interrumpir a nadie, a dos preguntas:
 
@@ -71,7 +71,7 @@ El MVP es una sola funcionalidad completa de principio a fin: una lista de tarea
 |---|---|
 | Estado "bloqueado" y gestión de bloqueos | Es la parte de la daily que el MVP declara no resuelta. Añadirlo a medias promete algo que no se cumple. |
 | Estados o flujos configurables | Tener que configurarlo todo es precisamente lo pesado de Jira. Con tres estados basta para decidir. |
-| Sincronización en tiempo real (épica E3 del backlog) | Ver los cambios en 5 a 10 segundos ya responde a "¿alguien está con esto?". El tiempo real cuesta mucho más y apenas mejora esa decisión. |
+| Sincronización en tiempo real (ampliación futura de E3; el MVP cubre E3 solo hasta el umbral de 5-10 s) | Ver los cambios en 5 a 10 segundos ya responde a "¿alguien está con esto?". El tiempo real cuesta mucho más y apenas mejora esa decisión. |
 | "Qué se ha movido desde mi última visita" | Encaja con el caso de "vuelvo por la mañana", pero es una segunda funcionalidad. Es mejor terminar una que dejar dos a medias. El filtro de la lista cubre parte de esa necesidad. |
 | Borrar tareas | Marcarlas como hechas ya cierra el trabajo. Borrar abre preguntas (quién puede hacerlo, si se puede deshacer) que no ayudan a decidir nada. |
 | Editar el título o la fecha después de crear la tarea | No cambia quién está en qué. Es lo primero que entraría en la siguiente iteración si molesta en el uso real. |
