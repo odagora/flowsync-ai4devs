@@ -71,7 +71,7 @@ El MVP es una sola funcionalidad completa de principio a fin: una lista de tarea
 |---|---|
 | Estado "bloqueado" y gestión de bloqueos | Es la parte de la daily que el MVP declara no resuelta. Añadirlo a medias promete algo que no se cumple. |
 | Estados o flujos configurables | Tener que configurarlo todo es precisamente lo pesado de Jira. Con tres estados basta para decidir. |
-| Sincronización en tiempo real (E3) | Ver los cambios en 5 a 10 segundos ya responde a "¿alguien está con esto?". El tiempo real cuesta mucho más y apenas mejora esa decisión. |
+| Sincronización en tiempo real (épica E3 del backlog) | Ver los cambios en 5 a 10 segundos ya responde a "¿alguien está con esto?". El tiempo real cuesta mucho más y apenas mejora esa decisión. |
 | "Qué se ha movido desde mi última visita" | Encaja con el caso de "vuelvo por la mañana", pero es una segunda funcionalidad. Es mejor terminar una que dejar dos a medias. El filtro de la lista cubre parte de esa necesidad. |
 | Borrar tareas | Marcarlas como hechas ya cierra el trabajo. Borrar abre preguntas (quién puede hacerlo, si se puede deshacer) que no ayudan a decidir nada. |
 | Editar el título o la fecha después de crear la tarea | No cambia quién está en qué. Es lo primero que entraría en la siguiente iteración si molesta en el uso real. |
