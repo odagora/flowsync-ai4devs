@@ -2,7 +2,7 @@
 
 Este PRD parte del alcance acordado en [`alcance-mvp.md`](./alcance-mvp.md). Si los dos documentos chocan, manda el alcance: hay que corregir el PRD.
 
-Es un documento de producto. No incluye modelo de datos, endpoints, arquitectura ni nombres en código; todo eso se decide en la spec de implementación. Los supuestos van marcados como **[SUPUESTO]** y hay que validarlos antes de tomarlos por hechos.
+Es un documento de producto: describe qué necesita la persona usuaria, no cómo se implementa. Cómo se guardan los datos, cómo se comunican las partes, la arquitectura y los nombres en código se deciden en la spec de implementación. Los supuestos van marcados como **[SUPUESTO]** y hay que validarlos antes de tomarlos por hechos.
 
 ## 1. Problema y contexto
 
@@ -61,7 +61,7 @@ FlowSync quiere que el estado del equipo se vea de un vistazo, en una lista comp
 - **Filtrar** la lista por estado.
 - **Vencidas.** Las tareas vencidas aparecen marcadas.
 - **Cambios del resto.** Lo que cambien los demás se ve en 10 segundos como máximo, sin recargar.
-- **Tests.** El trabajo se entrega con tests automatizados.
+- **Pruebas.** El trabajo se entrega con pruebas automáticas.
 
 ### Fuera de alcance
 
@@ -105,8 +105,8 @@ Estos requisitos describen el comportamiento que ya existe. En el MVP solo hay q
 - **RF-1 Registro.** Una persona se registra con:
   - nombre, opcional;
   - email, obligatorio y con formato válido;
-  - contraseña de 8 a 32 caracteres;
-  - confirmación de la contraseña.
+  - una contraseña lo bastante larga para ser segura;
+  - la misma contraseña repetida para confirmarla.
 
   El sistema rechaza un email que ya esté registrado y una confirmación que no coincida, y muestra el motivo en el campo afectado. Al terminar el registro, la persona queda autenticada y dentro del espacio único.
 - **RF-2 Login.** Con email y contraseña correctos, la persona accede. Si son incorrectos, el sistema muestra un error que no dice cuál de los dos ha fallado.
@@ -123,10 +123,10 @@ Estos requisitos describen el comportamiento que ya existe. En el MVP solo hay q
   - el título está vacío, o
   - no tiene responsable.
 
-  En los dos casos indica el motivo. **[SUPUESTO]** Un título que solo tiene espacios cuenta como vacío. El título tiene una longitud máxima, que fijará la spec.
-- **RF-8 Elegir responsable.** Al crear o al reasignar, el selector de responsable muestra a todos los usuarios registrados. A cada uno se le identifica por su nombre o, si no tiene nombre, por su email.
+  En los dos casos indica el motivo. **[SUPUESTO]** Un título que solo tiene espacios cuenta como vacío.
+- **RF-8 Elegir responsable.** Al crear o reasignar una tarea, se puede elegir como responsable a cualquier persona registrada. Cada persona aparece con su nombre o, si no tiene nombre, con su email.
 - **RF-9 Lista compartida.** Cualquier persona autenticada ve todas las tareas del espacio. De cada tarea se ve el título, el responsable, el estado y la fecha de vencimiento si la tiene.
-- **RF-10 Distinguir "en curso".** Cada fila de la lista muestra el estado de la tarea con una marca visual propia: una etiqueta con el nombre del estado y un estilo distinto para cada uno. La marca de "en curso" es diferente de la de "pendiente" y de la de "hecho". Así se responde a "¿alguien está ya con esto?" sin abrir ninguna tarea.
+- **RF-10 Distinguir "en curso".** Mirando solo la lista, sin abrir ninguna tarea, se sabe en qué estado está cada una. Las tareas en curso se reconocen a simple vista, sin confundirlas con las pendientes ni con las hechas. Así se responde a "¿alguien está ya con esto?".
 - **RF-11 Cambiar estado.** Desde la propia lista, sin cambiar de pantalla, cualquier persona autenticada puede poner cualquier tarea en cualquiera de los tres estados en dos clics como máximo. Se puede pasar de cualquier estado a cualquier otro, también de "hecho" a "pendiente", porque no hay flujo obligatorio.
 - **RF-12 Estados fijos.** Los únicos estados posibles son pendiente, en curso y hecho. No se pueden añadir, renombrar ni quitar.
 - **RF-13 Reasignar.** Cualquier persona autenticada puede cambiar el responsable de cualquier tarea por otro usuario registrado. Una tarea nunca se queda sin responsable.
@@ -137,18 +137,18 @@ Estos requisitos describen el comportamiento que ya existe. En el MVP solo hay q
 
   Una tarea sin fecha nunca aparece como vencida. Al pasar a "hecho", una tarea vencida deja de estar marcada. **[SUPUESTO]** Una tarea que vence hoy todavía no está vencida, y "hoy" se calcula con el huso horario de quien mira la lista.
 
-  *Riesgo:* con 3 husos horarios, la misma tarea puede verse vencida para una persona y no para otra durante unas horas. Se acepta en el MVP; los tests deben fijar el huso horario.
-- **RF-16 Orden de la lista.** La lista tiene un orden por defecto que la persona no puede cambiar. Si no cambia ninguna tarea, dos cargas seguidas muestran el mismo orden. **[SUPUESTO]** Las tareas creadas más recientemente aparecen primero; la spec puede ajustarlo.
+  *Riesgo:* con 3 husos horarios, la misma tarea puede verse vencida para una persona y no para otra durante unas horas. Se acepta en el MVP.
+- **RF-16 Orden de la lista.** La lista tiene un orden por defecto que la persona no puede cambiar. Mientras no cambie nada, las tareas aparecen siempre en el mismo orden. **[SUPUESTO]** Las tareas creadas más recientemente aparecen primero.
 - **RF-17 Lo que no se puede hacer.** El producto no ofrece ninguna forma de:
   - borrar una tarea;
   - editar el título o la fecha de una tarea ya creada;
-  - añadirle campos distintos de título, responsable, estado y fecha.
+  - guardar en una tarea más información que título, responsable, estado y fecha.
 
 ### E3 — Actividad del equipo
 
-- **RF-18 Ver cambios ajenos sin recargar.** Si otra persona crea una tarea, le cambia el estado o la reasigna, el cambio aparece en la lista de quien la tiene abierta dentro del plazo de RNF-1. No hace falta recargar ni hacer nada. **[SUPUESTO]** Si dos personas cambian la misma tarea casi a la vez, se queda el último cambio, y todos acaban viendo ese mismo valor dentro del plazo de RNF-1.
+- **RF-18 Ver cambios ajenos sin recargar.** Si otra persona crea una tarea, le cambia el estado o la reasigna, el cambio aparece en la lista de quien la tiene abierta dentro del plazo de RNF-1. No hace falta recargar ni hacer nada. **[SUPUESTO]** Si dos personas cambian la misma tarea casi a la vez, prevalece el último cambio, y todo el equipo acaba viendo lo mismo dentro del plazo de RNF-1.
 - **RF-19 El filtro se mantiene.** Al llegar cambios de otras personas, el filtro activo se conserva. Si una tarea cambia de estado y ya no cumple el filtro, desaparece de la vista; si pasa a cumplirlo, aparece.
-- **RF-20 Volver a la lista.** Al abrir la lista, o al volver a una pestaña que se dejó abierta (por ejemplo, de un día para otro), se ve el estado actual de todas las tareas en el plazo de RNF-1, no una versión anterior.
+- **RF-20 Volver a la lista.** Al abrir la lista, o al volver a ella después de dejarla abierta (por ejemplo, de un día para otro), se ve el estado actual de todas las tareas en el plazo de RNF-1, no una versión anterior.
 - **RF-21 Sin presencia ni avisos.** El producto no muestra:
   - quién está conectado;
   - la última actividad de una persona;
@@ -161,43 +161,36 @@ Estos requisitos describen el comportamiento que ya existe. En el MVP solo hay q
 - **RNF-1 Frescura.** Un cambio hecho por una persona aparece en la lista abierta de las demás en 10 segundos como máximo.
   - **Umbral de fallo:** más de 10 segundos.
   - **Margen aceptado:** se acordó que de 5 a 10 segundos vale, así que no hace falta bajar de 5 segundos. La sincronización en tiempo real no es un requisito.
-  - **Cómo se prueba:** con dos sesiones abiertas a la vez y conexión normal.
+  - **Cómo se prueba:** dos personas con la lista abierta a la vez y conexión normal.
   - **Carga [SUPUESTO]:** hasta 10 personas con la lista abierta a la vez, que es el tamaño máximo del equipo objetivo.
 - **RNF-2 Coste de actualizar.**
   - Cambiar el estado de una tarea: 2 clics como máximo desde la lista.
   - Crear una tarea: no hace falta rellenar nada más que el título.
   - Ninguna acción del producto obliga a pasar por un formulario de varios pasos.
 - **RNF-3 Respuesta.** Las acciones propias (crear, cambiar estado, reasignar) se ven reflejadas en la propia pantalla sin recargar. **[SUPUESTO]** Tardan menos de 1 segundo en condiciones normales.
-- **RNF-4 Volumen.** El producto está pensado para un espacio con 3 a 10 usuarios. **[SUPUESTO]** Debe funcionar bien con hasta unos cientos de tareas acumuladas, sin paginar.
+- **RNF-4 Volumen.** El producto está pensado para un espacio con 3 a 10 usuarios. **[SUPUESTO]** Debe funcionar bien con hasta unos cientos de tareas acumuladas, todas visibles en la misma lista sin pasar de página.
 - **RNF-5 Idioma.** Toda la interfaz y todos los mensajes de error están en castellano.
 - **RNF-6 Plataforma.** Se usa en navegadores de escritorio actuales. En un móvil, la lista y el cambio de estado tienen que poder usarse, pero no se optimiza la experiencia.
 - **RNF-7 Seguridad.**
-  - Todas las operaciones sobre tareas exigen estar autenticado.
-  - Las contraseñas no se guardan ni se muestran en claro.
+  - Ver o cambiar tareas exige haber iniciado sesión.
+  - Nadie puede ver la contraseña de otra persona, tampoco quien administra el producto.
   - Los errores de login no revelan si el email existe.
 - **RNF-8 Privacidad.** El producto no registra ni muestra actividad de las personas: ni presencia, ni tiempo de conexión, ni métricas individuales. Se excluye a propósito porque sería vigilancia.
 - **RNF-9 Calidad.**
-  - Cada RF de E2 y E3 tiene al menos un test automatizado que lo cubre. Una verificación manual puede complementar un test, pero nunca lo sustituye.
-  - Los tests no modifican datos que ya existían antes de ejecutarlos.
-  - El resultado de los tests no depende del orden en que se ejecutan ni de ejecuciones anteriores.
-  - El MVP no se considera terminado con tests que fallen.
+  - Cada RF de E2 y E3 está cubierto por al menos una prueba automática. Las pruebas se pueden repetir y dan siempre el mismo resultado.
+  - Una comprobación manual puede complementar una prueba automática, pero nunca la sustituye.
+  - El MVP no se considera terminado mientras falle alguna prueba.
 
 ## 8. Restricciones
 
-- **Stack actual, sin cambios.**
-  - Backend: AdonisJS 7 con base de datos SQLite.
-  - Frontend: React 19 con Vite.
-  - Las épicas se construyen sobre ese stack.
-- **La autenticación ya existe** y se reutiliza: registro, login, perfil y logout con tokens de acceso. E1 no se reconstruye.
+- **Stack actual, sin cambios.** Las épicas se construyen sobre AdonisJS 7 en el backend y React 19 en el frontend.
+- **La autenticación ya existe** y se reutiliza: registro, login, perfil y logout. E1 no se reconstruye.
 - **Un solo espacio.** No existe el concepto de equipo ni de espacio. Todo usuario registrado pertenece al único espacio. **[SUPUESTO]** Cada despliegue corresponde a un equipo.
 - **Sin servicios de terceros.**
-  - Nada de integraciones, OAuth externo ni proveedores de notificaciones.
+  - Nada de integraciones, inicio de sesión con cuentas de otros servicios ni servicios externos de avisos.
   - El estado lo escribe la persona; no se deriva de ninguna fuente externa.
-- **Tests con lo que hay.**
-  - El backend ya tiene un runner de tests.
-  - El frontend no tiene ninguno instalado.
-  - La spec decide cómo se cumple RNF-9 para los requisitos de interfaz (RF-10, RF-11, RF-14, RF-15, RF-18, RF-19), pero tienen que quedar cubiertos por tests automatizados. Eso probablemente obliga a añadir un runner de tests en el frontend.
-- **Sin diseño técnico en este documento.** El modelo de datos, la API y cómo se logra la frescura de RNF-1 se deciden en la spec de implementación.
+- **Pruebas de lo que ve la persona.** Hoy solo hay pruebas automáticas para la parte del servidor. Para cubrir los requisitos que se ven en pantalla (RF-10, RF-11, RF-14, RF-15, RF-18 y RF-19) hará falta ampliarlas. Cómo hacerlo lo decide la spec.
+- **Sin diseño técnico en este documento.** La spec de implementación decide cómo se guardan los datos, cómo se comunican las partes y cómo se consigue la frescura de RNF-1.
 
 ## 9. Métricas de éxito
 
@@ -215,4 +208,4 @@ El primer usuario es un **caso de estudio ficticio**, así que estas métricas n
 
 - Todos los RF-1 a RF-21 se cumplen. Los de E1 solo se comprueban como no rotos, porque ya existen.
 - RNF-1, RNF-2 y RNF-9 se han verificado.
-- Ningún test falla.
+- Ninguna prueba falla.
