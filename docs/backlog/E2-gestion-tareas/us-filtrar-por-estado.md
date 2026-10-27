@@ -47,7 +47,7 @@ Lo mismo vale al filtrar por «en curso» o por «hecho».
 
 ### Errores y casos límite
 
-**CA-5. Se pide un estado que no existe** (USUARIO)
+**CA-5. Se pide un estado que no existe** (USUARIO: avisar del error en vez de mostrar una lista vacía. [PROPUESTO]: los ejemplos de cómo se llega a ese estado y la lista de estados válidos en el aviso)
 
 - DADO que llego a la lista filtrada por un estado que no es ninguno de los tres (por ejemplo, desde un enlace antiguo o mal escrito, o pidiendo «bloqueado», que no existe en el producto)
 - CUANDO se muestra la lista
@@ -75,7 +75,7 @@ Lo mismo vale al filtrar por «en curso» o por «hecho».
 - ENTONCES la tarea deja de verse con este filtro
 - Y sigue apareciendo en «en curso» y en «todas».
 
-**CA-9. Crear una tarea con un filtro que no la incluye** [PROPUESTO]
+**CA-9. Crear una tarea con un filtro que no la incluye** [PROPUESTO; excepción a RF-6, que dice que la tarea nueva aparece en la lista]
 
 - DADO que tengo la lista filtrada por «en curso» o por «hecho»
 - CUANDO creo una tarea nueva, que nace en «pendiente»

@@ -84,11 +84,11 @@ Cada criterio indica su origen:
 
 ### Casos límite y errores
 
-**CA-11. Pasa la medianoche con la lista abierta** [PROPUESTO]
+**CA-11. Pasa la medianoche con la lista abierta** [PROPUESTO; depende de PA-8]
 
 - DADO que tengo la lista abierta y una tarea pendiente vence hoy
 - CUANDO empieza el día siguiente y sigo con la lista abierta, sin recargar
-- ENTONCES la tarea pasa a aparecer marcada como vencida, como mucho dentro del plazo de frescura (RNF-1).
+- ENTONCES la tarea pasa a aparecer marcada como vencida, como mucho en el plazo de RF-20.
 
 **CA-12. Reabrir una tarea que vencía la vuelve a marcar** [PROPUESTO]
 
