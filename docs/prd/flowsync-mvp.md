@@ -200,7 +200,7 @@ El primer usuario es un **caso de estudio ficticio**, así que estas métricas n
 |---|---|---|---|
 | M-1 (principal) | La ronda de "¿en qué estás?" desaparece de la daily | Observación de la daily después de 1 semana de uso real | El equipo deja de hacer la ronda y nadie pide que vuelva. Si la siguen haciendo igual, el MVP no ha funcionado. |
 | M-2 | El estado está fresco (riesgo #1) | Muestreo diario: se pregunta a cada responsable si sus tareas "en curso" reflejan lo que está haciendo de verdad | **[SUPUESTO]** ≥ 80 % de coincidencia |
-| M-3 | El estado se actualiza a mano | % de tareas hechas que pasaron antes por "en curso" | **[SUPUESTO]** ≥ 70 %. Por debajo, la gente salta pasos y "en curso" deja de ser una señal fiable. |
+| M-3 | El estado se actualiza a mano | **No se puede medir con este MVP.** Hace falta saber por qué estados pasó cada tarea, y el historial de cambios está fuera de alcance (§4). | Ninguno. Esta métrica no cuenta para evaluar el MVP. |
 | M-4 | Menos interrupciones | Preguntas tipo "¿en qué estás?" o "¿cómo va?" en el chat del equipo por semana, comparadas con la semana anterior a usar FlowSync | **[SUPUESTO]** Bajan al menos a la mitad |
 | M-5 | Sin trabajo duplicado | Episodios de dos personas trabajando en lo mismo sin saberlo, durante el periodo de prueba | **[SUPUESTO]** 0 entre tareas registradas en FlowSync durante la semana de M-1. Los que vengan de trabajo sin tarea cuentan para el riesgo #2. |
 
@@ -209,3 +209,93 @@ El primer usuario es un **caso de estudio ficticio**, así que estas métricas n
 - Todos los RF-1 a RF-21 se cumplen. Los de E1 solo se comprueban como no rotos, porque ya existen.
 - RNF-1, RNF-2 y RNF-9 se han verificado.
 - Ninguna prueba falla.
+
+## 10. Puntos abiertos
+
+Son hallazgos de la revisión adversarial del PRD, ordenados de más a menos riesgo. Ninguno cambia todavía el alcance: cada uno recoge el argumento y lo que haría falta para decidirlo. La fecha de vencimiento y el filtrado por estado se mantienen dentro del alcance, en E2. Los puntos que los cuestionan solo se refieren a cómo se hacen, no a si entran.
+
+### PA-1. "Sustituye al gestor" funciona como supuesto, no como decisión
+
+- **Argumento.**
+  - Si el equipo no puede dejar su gestor actual (porque otros equipos, un cliente o la dirección siguen usándolo), acabará actualizando dos herramientas. El estado se quedará viejo y el producto morirá.
+  - Además, importar tareas está fuera de alcance, así que adoptar FlowSync obliga a recrear a mano todo el trabajo en curso.
+- **Para decidir.** Preguntar a un equipo real qué le obliga a seguir en su gestor actual y si podría dejarlo. Según la respuesta, marcarlo como [SUPUESTO] crítico o como riesgo #3.
+
+### PA-2. La hipótesis principal no se valida dentro del MVP
+
+- **Argumento.** El primer usuario es ficticio, así que ni el riesgo #1 ni las métricas M-1 a M-5 se pueden comprobar. El MVP puede cumplir su criterio de terminado sin haber aprendido nada sobre lo que más importa.
+- **Para decidir.**
+  - ¿Hay un equipo real disponible? Puede ser el nuestro.
+  - ¿Durante cuánto tiempo lo usaría?
+  - ¿El MVP se da por cerrado sin esa validación o no?
+
+### PA-3. Espacio único con registro abierto
+
+- **Argumento.** Cualquiera que se registre entra en el espacio. Ve y edita todas las tareas y, con RF-8, ve el email de todo el equipo. Vale para una demo, pero no para un uso real.
+- **Para decidir.** Dónde se va a desplegar el producto. Si va a haber uso real, elegir un control de acceso mínimo, como invitaciones o una lista de emails permitidos, y decidir si entra en E1.
+
+### PA-4. Caso síncrono frente a caso asíncrono
+
+- **Argumento.**
+  - E3 actualiza la lista en 10 segundos, y eso sirve a quien la tiene abierta mientras otros la cambian.
+  - Pero con 3 husos horarios el uso mayoritario será otro: "llego por la mañana y veo qué ha cambiado" (JTBD-4).
+  - Ese caso solo queda cubierto por el estado actual, porque "qué se ha movido desde mi última visita" está fuera de alcance.
+  - Puede que estemos invirtiendo en el caso equivocado.
+- **Para decidir.**
+  - Observar cuándo consulta la lista el equipo: ¿mientras trabaja o al empezar el día?
+  - Comparar en la spec el coste de E3 con el de "qué ha cambiado".
+
+### PA-5. Detectar el solapamiento con títulos libres
+
+- **Argumento.** El episodio de referencia fue un choque a nivel de módulo. Sin descripción, etiquetas ni búsqueda, dos tareas con títulos distintos sobre la misma zona no se ven como un choque, aunque las dos estén creadas.
+- **Para decidir.** Comprobar con el episodio real si los títulos habrían delatado el choque. Si no, decidir qué dato mínimo haría falta.
+
+### PA-6. El coste de E3
+
+- **Argumento.** RF-18, RF-19 y el supuesto sobre cambios simultáneos traen consigo actualización automática, que el filtro se mantenga y pruebas que dependen del tiempo. Es la parte más cara del MVP para la necesidad más débil. Está ligado a PA-4.
+- **Para decidir.** Estimar E3 en la spec y compararlo con lo que aporta.
+
+### PA-7. Pruebas de interfaz: trabajo que no se ve
+
+- **Argumento.** RNF-9 exige pruebas automáticas para requisitos que se ven en pantalla, y hoy solo hay pruebas en el servidor. Montar esas pruebas es trabajo propio que el plan no refleja.
+- **Para decidir.** En la spec, estimarlo y decidir si va dentro de E2 y E3 o como tarea aparte.
+
+### PA-8. Cómo se calcula "hoy" para las tareas vencidas (RF-15)
+
+- **Argumento.** Calcular "hoy" con el huso horario de quien mira la lista añade complejidad, y con 3 husos la misma tarea se ve de forma distinta según la persona. La fecha de vencimiento sigue dentro del alcance, en E2. Lo que está abierto es la regla.
+- **Para decidir.** Elegir con el equipo qué huso manda: el de quien mira, uno común del equipo o el de quien creó la tarea.
+
+### PA-9. Uso en móvil (RNF-6)
+
+- **Argumento.** "Tiene que poder usarse" no tiene límite claro y nadie lo va a verificar.
+- **Para decidir.** Qué acciones mínimas tienen que funcionar en móvil y cómo se comprueba.
+
+### PA-10. Criterio objetivo en RF-1 y RF-10
+
+- **Argumento.** "Lo bastante larga para ser segura" (RF-1) y "se reconocen a simple vista" (RF-10) no tienen un criterio que se pueda comprobar. Se puede resolver durante la construcción.
+- **Para decidir.** Fijar la longitud mínima de la contraseña como regla de producto y definir qué se observa para dar RF-10 por cumplido. Se puede cerrar en la spec.
+
+### PA-11. Términos sin definir en los RNF
+
+- **Argumento.** Faltan definiciones para "conexión normal" (RNF-1), "condiciones normales" (RNF-3), "unos cientos de tareas" y "funcionar bien" (RNF-4), y "nadie puede ver la contraseña" (RNF-7). Se puede resolver durante la construcción.
+- **Para decidir.** Fijar en la spec las condiciones de prueba de cada uno.
+
+### PA-12. RF-20 se solapa con RF-18
+
+- **Argumento.** RF-20 repite en buena parte lo que ya dice RF-18, y "volver a la lista después de dejarla abierta" no tiene un criterio claro para saber si se cumple. Se puede resolver durante la construcción.
+- **Para decidir.** Fusionarlos o darle a RF-20 un criterio propio en la spec.
+
+### PA-13. Métodos de medición que chocan con la propuesta de valor
+
+- **Argumento.**
+  - M-2 pregunta a diario a cada responsable: es una interrupción, justo lo que el producto quiere evitar.
+  - M-4 cuenta mensajes del chat del equipo, lo que exige leer su conversación. Choca con el espíritu de RNF-8 ("nada de vigilancia").
+- **Para decidir.** Si estos métodos se aceptan durante una prueba acotada y con el consentimiento del equipo, o si se buscan otros.
+
+### PA-14. Muestras demasiado pequeñas y umbrales sin base
+
+- **Argumento.**
+  - M-1 es binaria, con un equipo y una semana.
+  - M-5 da 0 duplicados en una semana, que es lo esperable por puro azar.
+  - Los umbrales de M-2 y M-4 son [SUPUESTO] sin ningún dato detrás.
+- **Para decidir.** Cuántos equipos y cuánto tiempo, y qué resultado contaría como evidencia antes de empezar la prueba.
