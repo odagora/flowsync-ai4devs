@@ -42,7 +42,7 @@ Todo lo de esta lista es entrega, no criterios nuevos.
   - [ ] La marca de vencida no depende solo del color: lleva texto o icono.
   - [ ] Una tarea sin fecha no muestra un hueco ni un valor extraño.
 - **FS-118.7**
-  - [ ] El cambio de día se prueba con un reloj simulado, sin esperar a medianoche.
+  - [ ] El cambio de día se comprueba simulándolo, sin esperar a medianoche. La prueba automática de CA-11 y CA-12 va en FS-118.8, que es donde se resuelve PA-7.
 - **FS-118.8**
   - [ ] El PR incluye una tabla que relaciona cada CA con su test.
   - [ ] CA-17 y CA-18 se prueban cuando existan el filtro (FS-142) y la reasignación (HU-7). Hasta entonces se marcan como pendientes, no como superados.
@@ -95,16 +95,16 @@ graph LR
 **Con dos personas:**
 
 - **Persona A:** FS-118.1, FS-118.2, FS-118.4 y FS-118.6 (el camino crítico).
-- **Persona B:** FS-118.3 y FS-118.5 en cuanto esté FS-118.1. Después, el runner de PA-7.
+- **Persona B:** FS-118.3 y FS-118.5 en cuanto esté FS-118.1. Después, si PA-7 se resuelve montando el runner, ese runner.
 
-**Si PA-8 tarda en decidirse:** con FS-118.1, FS-118.3 y FS-118.5 ya se entregan CA-1 y CA-2. Para ver la fecha en la lista hace falta FS-118.4. *Propuesta pendiente:* partir FS-118.4 para adelantar la parte que muestra la fecha, que no depende de PA-8.
+**Si PA-8 tarda en decidirse:** con FS-118.1, FS-118.3 y FS-118.5 ya se puede crear una tarea con o sin fecha. Pero CA-1 y CA-2 no se cumplen enteros hasta que la fecha se ve en la lista, y para eso hacen falta FS-118.4 y FS-118.6. *Propuesta pendiente:* partir FS-118.4 para adelantar la parte que muestra la fecha, que no depende de PA-8.
 
 ## Estimación y riesgo
 
 | Ticket | Talla | En qué se basa | Riesgo | Nota de riesgo |
 |---|---|---|---|---|
 | **FS-118.1** | **S** | Hereda dos criterios y sigue un flujo del repo ya conocido: migración y `migration:run`, que regenera `schema.ts`. | 🟢 Bajo | Depende de que exista la tabla de tareas de la base de tareas. |
-| **FS-118.2** | **M** | Tiene poco código, pero hereda ocho criterios con casos límite y cada uno necesita su test. | 🔴 Alto | PA-8 está sin decidir y los cálculos con fechas y husos horarios son propensos a errores de un día. |
+| **FS-118.2** | **M** | Tiene poco código, pero hereda nueve criterios con casos límite y cada uno necesita su test. | 🔴 Alto | PA-8 está sin decidir y los cálculos con fechas y husos horarios son propensos a errores de un día. |
 | **FS-118.3** | **M** | Añade validación nueva, y CA-9 obliga a probar que ninguna otra operación toca la fecha. | 🟠 Medio | La validación de fechas en VineJS 4 difiere de la documentación de la v6. Una fecha sin hora puede desplazarse un día. **Si la base de tareas no ha montado la suite funcional, la estrena este ticket y pasa a L.** |
 | **FS-118.4** | **S** | Añade campos a una respuesta que ya existe, mediante un transformer (patrón de `UserTransformer`). | 🟠 Medio | Según cómo se resuelva PA-8, el cálculo de vencida puede moverse al frontend y vaciar el ticket. |
 | **FS-118.5** | **M** | Introduce un control de fecha nuevo, probablemente con un componente shadcn que aún no está en el repo. Además, CA-16 y los errores por campo. | 🟠 Medio | Posible desfase de un día entre el navegador y la API. Añade dependencias nuevas. CA-13 a CA-16 son [PROPUESTO]. |

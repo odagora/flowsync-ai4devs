@@ -12,7 +12,7 @@
 
 | ID | Título | Tipo | Capa | Criterios que hereda | Bloqueado por |
 |---|---|---|---|---|---|
-| **FS-142.1** | Listar las tareas filtradas por un estado | Endpoint/API | Endpoint (listado) | CA-1, CA-2, CA-3, CA-11, CA-14 | Base de tareas (lista y estados) |
+| **FS-142.1** | Listar las tareas filtradas por un estado | Endpoint/API | Endpoint (listado) | CA-1, CA-2, CA-3, CA-11 | Base de tareas (lista y estados) |
 | **FS-142.2** | Rechazar un estado que no existe con un aviso que lo explique | Endpoint/API | Endpoint (listado) + validador | CA-5 | FS-142.1 |
 | **FS-142.3** | Selector de filtro por estado en la lista | Frontend | Interfaz (lista) + `lib/api.ts` | CA-1 a CA-4, CA-12 | FS-142.1 |
 | **FS-142.4** | Conservar el filtro al recargar y al llegar con él ya puesto | Frontend | Interfaz (lista) | CA-5 (cómo se llega), CA-13 | FS-142.3 · decisión sobre el enlace con filtro |
@@ -100,7 +100,9 @@ graph LR
 **Con dos personas:**
 
 - **Persona A:** FS-142.1 y FS-142.2. Después, FS-142.6 cuando existan sus dependencias.
-- **Persona B:** el runner de PA-7 mientras A hace FS-142.1. Después, FS-142.3, FS-142.4 y FS-142.5.
+- **Persona B:** si PA-7 se resuelve montando el runner, lo monta mientras A hace FS-142.1. Después hace FS-142.3, FS-142.4 y FS-142.5.
+
+CA-14 no lo hereda ningún ticket de implementación de esta historia: la marca de vencida la entregan FS-118.4 y FS-118.6, y FS-142.7 solo comprueba que se mantiene al filtrar.
 
 ## Estimación y riesgo
 
@@ -118,7 +120,7 @@ graph LR
 
 ## Pendiente antes de arrancar
 
-1. **Aprobar o descartar CA-4, CA-6 a CA-9, CA-12 y CA-13.** Condicionan FS-142.4, FS-142.5 y FS-142.6.
+1. **Aprobar o descartar CA-4, CA-6 a CA-9, CA-12 y CA-13.** Condicionan FS-142.3 (CA-4 y CA-12), FS-142.4, FS-142.5 y FS-142.6.
 2. **Decidir si el filtro puede venir en un enlace.** Determina FS-142.4. Si no puede, al estado inexistente solo se llega forzando la petición; FS-142.2 sigue haciendo falta.
 3. **Decidir qué se ve bajo el aviso de estado inexistente.** Bloquea el cierre de FS-142.5.
 4. **Decidir PA-7.** Bloquea la parte frontend de FS-142.7.

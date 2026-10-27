@@ -1,6 +1,6 @@
 # Priorización de E2 «Gestión de tareas» y del tiempo real de E3
 
-En esta matriz están todas las historias de E2, tanto las que entran en el MVP como las que se quedan fuera, junto con la sincronización en tiempo real de E3 «Actividad del equipo».
+En esta matriz están las historias de E2 que se identificaron al descomponer la épica, tanto las que entran en el MVP como las que se quedan fuera, junto con la sincronización en tiempo real de E3 «Actividad del equipo».
 
 **Qué miden los ejes.** Las posiciones son criterio de producto; no salen de datos de usuarios, porque el primer usuario es un caso de estudio.
 
@@ -44,14 +44,14 @@ quadrantChart
     quadrant-2 Quick wins
     quadrant-3 Relleno
     quadrant-4 Evitar
-    HU-1 Lista compartida: [0.45, 0.95]
+    HU-1 Lista compartida: [0.55, 0.95]
     HU-3 Crear tarea: [0.30, 0.90]
     HU-6 Cambiar estado: [0.20, 0.88]
     HU-2 Distinguir estado: [0.10, 0.84]
     HU-7 Reasignar: [0.25, 0.74]
     Bloqueado: [0.62, 0.80]
-    HU-4 Responsable al crear: [0.32, 0.56]
-    FS-118 Fechas y vencidas: [0.72, 0.55]
+    HU-4 Responsable al crear: [0.32, 0.48]
+    FS-118 Fechas y vencidas: [0.72, 0.48]
     FS-142 Filtrar por estado: [0.30, 0.47]
     Editar titulo y fecha: [0.38, 0.44]
     Descripcion y etiquetas: [0.72, 0.42]
@@ -74,10 +74,10 @@ quadrantChart
 | ⭐ HU-7 Reasignar | Sí | Alto | Baja | Como toda tarea tiene responsable, «coger algo» es reasignarlo. Se cambia un único dato. |
 | HU-4 Responsable al crear | Sí | Medio | Baja | Es útil, pero reasignar después cubre casi lo mismo. Requiere listar a las personas (RF-8). |
 | FS-142 Filtrar por estado | Sí | Medio | Baja | Con listas de 3 a 10 personas ayuda, pero no es crítico. El riesgo está en las decisiones, no en el código. |
-| FS-118 Fechas y vencidas | Sí | Medio | Alta | No responde a ninguna de las dos preguntas: es JTBD-5. Es lo más complejo de E2 por los husos horarios (PA-8) y tiene 8 tickets. |
+| FS-118 Fechas y vencidas | Sí | Medio | Alta | No responde a ninguna de las dos preguntas: es JTBD-5. Es de lo más complejo de E2 por los husos horarios (PA-8). |
 | HU-10 Orden estable | Sí | Bajo | Baja | Sale casi gratis con HU-1. |
 | Estado «bloqueado» | No | Alto | Media | Es la mitad de la daily que no se resuelve. Técnicamente cuesta poco; lo difícil es decidir qué significa. |
-| Editar título y fecha | No | Medio | Baja | Es el primer candidato después del MVP, según el PRD. Editar la fecha obliga a revisar la regla de vencida. |
+| Editar título y fecha | No | Medio | Baja | Es el primer candidato después del MVP, según el [alcance](../prd/alcance-mvp.md). Editar la fecha obliga a revisar la regla de vencida. |
 | Descripción y etiquetas | No | Medio | Alta | Podría ayudar con PA-5 (ver solapamientos), pero añade campos y pantallas. Riesgo de que el alcance crezca. |
 | Dejar sin responsable | No | Medio-bajo | Media | Contradice una decisión ya tomada (RF-7 y RF-13) y obliga a revisar varias reglas. |
 | Archivar hechas | No | Bajo | Baja | Hoy lo cubre el filtro. Gana valor cuando la lista crece. |
@@ -97,7 +97,8 @@ El refresco del MVP en 10 s (RF-18 a RF-20) no entra en la matriz, porque esta s
 
 El orden sigue primero las dependencias y después los quick wins. FS-118 y FS-142 se mantienen dentro del MVP, en E2.
 
-1. **HU-1 Lista compartida.** Es la base de todo. *Propuesta pendiente:* absorber HU-10 como criterio de HU-1.
+1. **HU-1 Lista compartida.** Es la base de todo.
+   **HU-10 Orden estable.** Va junto a HU-1, porque sale casi gratis con ella. *Propuesta pendiente:* absorberla como criterio de HU-1.
 2. ⭐ **HU-3 Crear tarea**
 3. ⭐ **HU-6 Cambiar estado**
 4. ⭐ **HU-2 Distinguir estado.** Con los pasos 1 a 4 ya se puede validar la hipótesis principal.
@@ -123,6 +124,10 @@ Son candidatos, no compromisos. Cada uno depende de lo que se aprenda con el uso
 
 - **Aviso al reasignar:** contradice la propuesta de valor.
 - **Ordenar y combinar filtros:** no compensa su coste.
+
+### Dependencia de E3 fuera de esta priorización
+
+FS-118.7 y FS-142.6 dependen del refresco de 10 s del MVP (RF-18 a RF-20, de E3). Ese refresco no se prioriza aquí, porque esta matriz solo cubre E2 y el tiempo real de E3. Mientras no exista, esos dos tickets siguen bloqueados.
 
 ### Nota sobre el orden
 
