@@ -24,6 +24,7 @@ test.group('Tasks | responsable', (group) => {
     await User.create({ fullName, email, password: 'secreto123' })
 
     const response = await client.post('/api/v1/auth/login').json({ email, password: 'secreto123' })
+    response.assertStatus(200)
 
     return response.body().data.token as string
   }
@@ -103,8 +104,11 @@ test.group('Tasks | responsable', (group) => {
 
     const fallos = Object.entries(lecturas)
       .filter(([, assignee]) => {
-        const sobrantes = Object.keys(assignee ?? {}).filter((k) => !permitidas.includes(k))
-        const serializado = JSON.stringify(assignee ?? {})
+        // Un assignee ausente no es un assignee limpio: sin esto, una respuesta
+        // que lo perdiera pasaría este test sin mirar nada.
+        if (typeof assignee !== 'object' || assignee === null) return true
+        const sobrantes = Object.keys(assignee).filter((k) => !permitidas.includes(k))
+        const serializado = JSON.stringify(assignee)
         return (
           sobrantes.length > 0 ||
           serializado.includes('ada@example.com') ||
@@ -128,7 +132,8 @@ test.group('Tasks | responsable', (group) => {
     const fallos = Object.entries(lecturas)
       .filter(([, assignee]) => {
         const sinNombre = assignee !== undefined && assignee.fullName === null
-        const conIniciales = typeof assignee?.initials === 'string' && assignee.initials !== ''
+        // Sin nombre, las iniciales salen del email (`auth/initials.spec.ts`).
+        const conIniciales = assignee?.initials === 'SE'
         // «Sin recurrir a su email»: el email no debe ser lo que la interfaz
         // reciba en lugar del nombre.
         const sinEmail = !JSON.stringify(assignee ?? {}).includes('sin-nombre@example.com')
