@@ -1,4 +1,4 @@
-import Task, { DEFAULT_LIST_STATUSES } from '#models/task'
+import Task, { DEFAULT_LIST_STATUSES, TASK_STATUSES } from '#models/task'
 import {
   createTaskValidator,
   listTasksValidator,
@@ -8,7 +8,27 @@ import {
 import type { HttpContext } from '@adonisjs/core/http'
 import TaskTransformer from '#transformers/task_transformer'
 import TaskDetailTransformer from '#transformers/task_detail_transformer'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+} from '@foadonis/openapi/decorators'
+import {
+  ApiErrorResponse,
+  NotFoundResponse,
+  TaskDetailResponse,
+  TaskListResponse,
+  TaskResponse,
+} from '#openapi/schemas'
 
+@ApiBearerAuth()
+@ApiResponse({
+  status: 401,
+  description: 'Falta la cabecera `Authorization` o el token no es válido.',
+  type: ApiErrorResponse,
+})
 export default class TasksController {
   /**
    * La lista del espacio: una sola, la misma para todo el mundo, sin filtrar
@@ -25,6 +45,27 @@ export default class TasksController {
    *
    * Acotar es solo lectura: ninguna tarea cambia por consultarla.
    */
+  @ApiOperation({
+    summary: 'Lista compartida del espacio',
+    description:
+      'Todas las cuentas reciben el mismo conjunto, de la más reciente a la más antigua y sin paginar. Las tareas de la lista no llevan fecha de vencimiento ni condición de vencida.',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: [...TASK_STATUSES],
+    description: `Un único estado por el que acotar. Sin él se devuelven ${DEFAULT_LIST_STATUSES.join(' y ')}, nunca las hechas. Ojo: hoy el servidor no rechaza un valor fuera de estos tres; responde 200 con una lista vacía.`,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'La lista, vacía si nada cumple el alcance pedido.',
+    type: TaskListResponse,
+  })
+  @ApiResponse({
+    status: 422,
+    description: '`status` no es un texto, por ejemplo si llega repetido (`?status=a&status=b`).',
+    type: ApiErrorResponse,
+  })
   async index({ request, serialize }: HttpContext) {
     const { status } = await request.validateUsing(listTasksValidator)
 
@@ -51,6 +92,29 @@ export default class TasksController {
    * Una tarea suelta, con todo lo que tiene: es la única lectura que informa
    * del vencimiento, y por eso es la única que exige el día de quien mira.
    */
+  @ApiOperation({
+    summary: 'Una tarea suelta, con su vencimiento',
+    description:
+      'Cualquier cuenta con sesión puede consultar cualquier tarea. El vencimiento se resuelve contra `today`, nunca contra el reloj del servidor.',
+  })
+  @ApiQuery({
+    name: 'today',
+    required: true,
+    schema: { type: 'string', format: 'date' },
+    description: 'Día de referencia de quien consulta, en formato AAAA-MM-DD.',
+  })
+  @ApiResponse({ status: 200, description: 'La tarea.', type: TaskDetailResponse })
+  @ApiResponse({
+    status: 404,
+    description: 'No existe ninguna tarea con ese identificador.',
+    type: NotFoundResponse,
+  })
+  @ApiResponse({
+    status: 422,
+    description:
+      '`today` falta o no es un día válido. Se comprueba antes que la existencia de la tarea.',
+    type: ApiErrorResponse,
+  })
   async show({ params, request, serialize }: HttpContext) {
     const { today } = await request.validateUsing(taskReferenceDayValidator)
     const task = await Task.findOrFail(params.id)
@@ -63,6 +127,33 @@ export default class TasksController {
    * Crear cuesta un título. El responsable y el estado no se leen de la
    * petición ni aunque vengan: los pone el sistema.
    */
+  @ApiOperation({
+    summary: 'Crear una tarea con solo el título',
+    description:
+      'La tarea nace pendiente, sin fecha y a nombre de la cuenta del token. Cualquier otro campo del cuerpo se ignora.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['title'],
+      properties: {
+        title: {
+          type: 'string',
+          minLength: 1,
+          maxLength: 200,
+          description:
+            'Se recortan los espacios de los extremos antes de comprobar la longitud; nunca se guarda una versión truncada.',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'La tarea creada.', type: TaskResponse })
+  @ApiResponse({
+    status: 422,
+    description:
+      'Falta el título, queda vacío tras recortar los espacios o pasa de 200 caracteres.',
+    type: ApiErrorResponse,
+  })
   async store({ request, response, auth, serialize }: HttpContext) {
     const { title } = await request.validateUsing(createTaskValidator)
     const user = auth.getUserOrFail()
