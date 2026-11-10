@@ -10,10 +10,18 @@
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
+import openapi from '@foadonis/openapi/services/main'
 
 router.get('/', () => {
   return { hello: 'world' }
 })
+
+/**
+ * Documento OpenAPI (JSON y YAML) y su interfaz. Sin argumento cuelgan de
+ * `/api`, fuera del grupo `/api/v1`: la ruta la decide esta llamada, no
+ * `config/openapi.ts`.
+ */
+openapi.registerRoutes()
 
 router
   .group(() => {
