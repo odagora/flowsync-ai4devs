@@ -1,6 +1,7 @@
 import Task from '#models/task'
 import User from '#models/user'
 import { test } from '@japa/runner'
+import type { Assert } from '@japa/assert'
 import testUtils from '@adonisjs/core/services/test_utils'
 
 /**
@@ -44,48 +45,61 @@ test.group('Tasks | responsable', (group) => {
   }
 
   /**
-   * El `assignee` de la misma tarea leído desde la lista y desde la tarea
-   * suelta, en ese orden.
+   * El `assignee` de la misma tarea leído desde la tarea suelta y desde la
+   * lista, con el nombre de cada lectura para que un fallo diga cuál fue.
+   *
+   * La suelta va primero: si la lista falla, la suelta ya quedó comprobada en
+   * vez de quedarse sin mirar.
    */
-  async function asignadoEnAmbasLecturas(client: any, assert: any, token: string, task: Task) {
-    const lista = await client.get('/api/v1/tasks').header('Authorization', `Bearer ${token}`)
-    lista.assertStatus(200)
-
-    const enLista = lista.body().data.find((t: { id: number }) => t.id === task.id)
-    assert.exists(enLista, 'la tarea no aparece en la lista')
-
+  async function asignadoEnAmbasLecturas(client: any, assert: Assert, token: string, task: Task) {
+    // `today` no pinta nada en este requisito, pero la tarea suelta lo exige
+    // siempre (ver `taskReferenceDayValidator`): sin él la respuesta es un 422.
     const suelta = await client
       .get(`/api/v1/tasks/${task.id}`)
       .qs({ today: '2026-11-10' })
       .header('Authorization', `Bearer ${token}`)
     suelta.assertStatus(200)
 
-    return [enLista.assignee, suelta.body().data.assignee]
+    const lista = await client.get('/api/v1/tasks').header('Authorization', `Bearer ${token}`)
+    lista.assertStatus(200)
+
+    const enLista = lista.body().data.find((t: { id: number }) => t.id === task.id)
+    assert.exists(enLista, 'la tarea no aparece en la lista')
+
+    return [
+      ['la tarea suelta', suelta.body().data.assignee],
+      ['la lista', enLista.assignee],
+    ] as const
   }
 
   test('el responsable se identifica por su nombre y sus iniciales', async ({ client, assert }) => {
     const token = await sesion(client)
     const task = await tareaDe('Ada Lovelace', 'ada@example.com')
 
-    for (const assignee of await asignadoEnAmbasLecturas(client, assert, token, task)) {
-      assert.equal(assignee.fullName, 'Ada Lovelace')
-      assert.equal(assignee.initials, 'AL')
+    for (const [lectura, assignee] of await asignadoEnAmbasLecturas(client, assert, token, task)) {
+      assert.equal(assignee.fullName, 'Ada Lovelace', `nombre en ${lectura}`)
+      assert.equal(assignee.initials, 'AL', `iniciales en ${lectura}`)
     }
   })
 
-  test('la tarea no filtra el email ni los datos de acceso del responsable', async ({
+  test('la tarea no filtra el email ni ningún otro dato de la cuenta', async ({
     client,
     assert,
   }) => {
     const token = await sesion(client)
     const task = await tareaDe('Ada Lovelace', 'ada@example.com')
 
-    const [enLista, suelta] = await asignadoEnAmbasLecturas(client, assert, token, task)
-
-    // La tarea suelta va primero: si la lista falla, el fallo dice además que
-    // la suelta ya pasó, en vez de dejarla sin comprobar.
-    assert.notAnyProperties(suelta, ['email', 'password'], 'la tarea suelta expone datos de acceso')
-    assert.notAnyProperties(enLista, ['email', 'password'], 'la lista expone datos de acceso')
+    // Lista blanca y no negra: el requisito pide «lo justo para identificarlo»
+    // y ningún otro dato de la cuenta, así que un arreglo que quitara solo el
+    // email y dejara, por ejemplo, las fechas de la cuenta tiene que seguir en
+    // rojo.
+    for (const [lectura, assignee] of await asignadoEnAmbasLecturas(client, assert, token, task)) {
+      assert.sameMembers(
+        Object.keys(assignee),
+        ['id', 'fullName', 'initials'],
+        `${lectura} expone del responsable más de lo justo`
+      )
+    }
   })
 
   test('un responsable sin nombre llega con el nombre nulo y con iniciales', async ({
@@ -93,13 +107,13 @@ test.group('Tasks | responsable', (group) => {
     assert,
   }) => {
     const token = await sesion(client)
-    const task = await tareaDe(null, 'sin-nombre@example.com')
+    const task = await tareaDe(null, 'ada@example.com')
 
-    for (const assignee of await asignadoEnAmbasLecturas(client, assert, token, task)) {
-      assert.property(assignee, 'fullName')
-      assert.isNull(assignee.fullName)
-      assert.isString(assignee.initials)
-      assert.isNotEmpty(assignee.initials)
+    for (const [lectura, assignee] of await asignadoEnAmbasLecturas(client, assert, token, task)) {
+      assert.property(assignee, 'fullName', `nombre en ${lectura}`)
+      assert.isNull(assignee.fullName, `nombre en ${lectura}`)
+      // Las mismas que da la cuenta sin nombre en `auth/initials.spec.ts`.
+      assert.equal(assignee.initials, 'AE', `iniciales en ${lectura}`)
     }
   })
 })
