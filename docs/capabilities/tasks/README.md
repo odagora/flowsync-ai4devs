@@ -114,7 +114,7 @@ curl -s -X PUT $API/tasks/$ID/due-date -H "Authorization: Bearer $TOKEN" -H 'Con
   -d "{\"dueDate\":\"2026-01-01\",\"today\":\"$(date +%F)\"}" | jq
 ```
 
-El token también sirve en la interfaz de `http://localhost:3333/api`, en el esquema de seguridad `bearer`.
+**No pegues el token en la interfaz de `http://localhost:3333/api`.** Esa página carga Scalar desde `cdn.jsdelivr.net` sin versión fija, y su botón de probar peticiones las envía a través de `proxy.scalar.com`, un servicio de terceros que recibiría el token en la cabecera. Úsala solo para leer el contrato; para probar, usa `curl`.
 
 [crear]: ../../../openspec/specs/tasks/spec.md#requirement-creación-de-una-tarea-con-solo-el-título
 [sin-titulo]: ../../../openspec/specs/tasks/spec.md#requirement-ninguna-tarea-sin-título
