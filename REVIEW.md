@@ -21,8 +21,11 @@ recuento: «+N sugerencias menores no detalladas».
 
 - Formato, estilo e imports: ya los vigilan `eslint`/`prettier` (backend) y `oxlint`/`prettier` (frontend).
 - Errores de tipos: ya los vigila `tsc` (`npm run typecheck` en el backend, `npm run build` en el frontend).
-- Ficheros generados: `backend/database/schema.ts`, `backend/.adonisjs/`, `frontend/src/components/ui/`
-  (shadcn) y los `package-lock.json`. Si están mal, el fallo está en su origen; repórtalo allí.
+- Que `docs/api/openapi.json` esté al día: ya lo vigila `openapi:check` en CI. Sí es grave que el
+  contrato que describe no coincida con lo que el código hace.
+- Ficheros generados: `backend/database/schema.ts`, `backend/.adonisjs/`, `docs/api/openapi.json`,
+  `frontend/src/components/ui/` (shadcn) y los `package-lock.json`. Si están mal, el fallo está en su
+  origen; repórtalo allí.
 - Versiones del stack (AdonisJS 7, Lucid 22, VineJS 4, TS 6, React 19, Vite 8): son deliberadas.
   No propongas la API de una versión anterior.
 - Lo que el cambio no toca, salvo que el cambio lo rompa.
