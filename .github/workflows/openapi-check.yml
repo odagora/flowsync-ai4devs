@@ -38,7 +38,10 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          # Versión exacta, no `24`: con Node 24.22.2 Ace rechaza los comandos
+          # de `commands/` al validarlos (`jsonschema` lanza «Invalid URL»),
+          # y con 24.18.1 funcionan.
+          node-version-file: backend/.nvmrc
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
