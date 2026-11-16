@@ -30,9 +30,10 @@ verde sin revisar nada.
    `main`, así que hace falta un PR aparte que lleve este fichero a `main`. Cada vez que el workflow
    cambie, `main` tiene que recibir el mismo cambio. Un PR que modifique el workflow no se revisa a
    sí mismo.
-4. **Escribir `REVIEW.md`** en la raíz: qué cuenta como hallazgo, con qué severidad y qué no hay que
-   comentar. Hoy no existe. El revisor funciona sin él, pero sin calibración tiende a comentar estilo
-   y cosas que ya cubren el lint o el typecheck.
+4. **Mantener [`REVIEW.md`](../REVIEW.md) al día.** Ya existe y calibra al revisor: qué es grave y
+   qué es sugerencia, un tope de sugerencias, dónde no reportar y la exigencia de citar
+   `fichero:línea`. Cuando se añada otra comprobación al repo (un job de CI, un linter), hay que
+   sumarla a «Dónde no reportar», o el revisor la duplicará. Que siga cabiendo en una pantalla.
 5. **Comprobar el primer PR a mano.** Un job verde no demuestra nada (ver el paso 3). Lo que lo
    demuestra son los comentarios de `claude[bot]` en el PR.
 
