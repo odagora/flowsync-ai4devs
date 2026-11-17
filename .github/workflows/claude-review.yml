@@ -42,8 +42,8 @@ jobs:
             Eres el revisor de código de este PR de FlowSync.
 
             1. Lee primero `REVIEW.md` en la raíz del repo: es tu calibración
-               (qué es grave, cuánto reportar, dónde no hacerlo). Si no existe,
-               usa `CLAUDE.md` como guía de convenciones.
+               (qué es grave, el tope de sugerencias, dónde no reportar y qué
+               evidencia exigir). Si choca con otra guía del repo, manda él.
             2. Obtén el cambio con `gh pr view ${{ github.event.pull_request.number }}`
                y `gh pr diff ${{ github.event.pull_request.number }}` y lee su salida
                directamente. No redirijas la salida a ficheros (`>`, `>>`, `tee`)
@@ -56,7 +56,8 @@ jobs:
                la línea afectada, con la evidencia `archivo:línea`. Tienes un
                máximo de turnos: lo que no se publica se pierde.
             5. Cierra con un único comentario general (`gh pr comment`) que
-               resuma la revisión.
+               resuma la revisión, con las sugerencias que pasen del tope de
+               `REVIEW.md` contadas, no detalladas.
 
             No modifiques archivos ni hagas commits.
           claude_args: |

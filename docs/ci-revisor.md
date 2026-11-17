@@ -26,9 +26,11 @@ Sin estos pasos el workflow existe pero no revisa nada.
    sí mismo; el cambio tiene que llegar antes a `main`.
 4. **Comprobar que de verdad revisa**: un check verde no basta. Abre un PR de prueba y confirma que
    aparecen comentarios de `claude[bot]`.
-5. **Escribir la calibración** en `REVIEW.md` en la raíz, si aún no existe: qué es grave, cuántas
-   sugerencias publicar como máximo y dónde no reportar. El prompt la lee lo primero; sin ella el
-   revisor solo tiene `CLAUDE.md` como guía y tiende a comentar de más.
+
+La calibración del revisor vive en [`REVIEW.md`](../REVIEW.md), en la raíz: qué es grave, el tope
+de sugerencias, dónde no reportar y qué evidencia exigir. El prompt la lee lo primero. Para ajustar
+el criterio del revisor se edita ese archivo, no el workflow, y conviene que siga cabiendo en una
+pantalla.
 
 ## Credencial
 
