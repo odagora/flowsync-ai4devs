@@ -26,7 +26,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          # Versión exacta, no `24`: con 24.22.2 ace falla al validar los comandos
+          # de `commands/` («Invalid URL» en jsonschema). 24.18.1 está verificada.
+          node-version-file: backend/.nvmrc
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
