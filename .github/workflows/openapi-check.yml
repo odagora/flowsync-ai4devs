@@ -1,0 +1,44 @@
+name: OpenAPI
+
+# Falla si docs/api/openapi.json no coincide con el documento que produce el
+# código. Solo compara: no regenera ni commitea nada.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Solo lee el repositorio; ningún otro permiso del GITHUB_TOKEN.
+permissions:
+  contents: read
+
+jobs:
+  openapi-check:
+    name: openapi:check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          # Versión exacta, no `24`: con 24.22.2 ace falla al validar los comandos
+          # de `commands/` («Invalid URL» en jsonschema). 24.18.1 está verificada.
+          node-version-file: backend/.nvmrc
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Instalar dependencias del backend
+        run: npm ci
+
+      # Los comandos arrancan la app, y `start/env.ts` valida el entorno al
+      # arrancar: hace falta un .env con APP_KEY, como en el primer arranque local.
+      - name: Preparar el entorno
+        run: cp .env.example .env && node ace generate:key
+
+      - name: Comprobar el documento OpenAPI
+        run: npm run openapi:check
